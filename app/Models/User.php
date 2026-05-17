@@ -11,13 +11,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable, HasRoles;
+    use HasFactory, Notifiable, TwoFactorAuthenticatable, HasRoles, HasUuids;
 
     /**
      * Get the attributes that should be cast.
