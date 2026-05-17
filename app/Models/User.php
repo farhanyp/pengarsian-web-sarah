@@ -20,6 +20,18 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable, HasRoles, HasUuids;
 
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
+
+    protected $hidden = ['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'];
+
     /**
      * Get the attributes that should be cast.
      *
