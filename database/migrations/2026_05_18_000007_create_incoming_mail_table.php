@@ -13,14 +13,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $tableName = 'outgoing_mail'; // Singular table name matching the ERD exactly
+        $tableName = 'incoming_mail'; // Singular table name matching the ERD exactly
 
         DB::beginTransaction();
         try {
             Schema::create($tableName, function (Blueprint $table) {
                 $table->bigIncrements('id'); // bigserial PK
                 $table->uuid('document_id');
-                $table->timestamp('sent_at')->useCurrent(); // timestamp field
+                $table->timestamp('received_at')->useCurrent(); // timestamp field
 
                 // Foreign Key constraint
                 $table->foreign('document_id')
@@ -30,7 +30,7 @@ return new class extends Migration
 
                 // Indexes specified in the ERD
                 $table->index('document_id');
-                $table->index('sent_at');
+                $table->index('received_at');
             });
 
             DB::commit();
@@ -46,7 +46,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        $tableName = 'outgoing_mail';
+        $tableName = 'incoming_mail';
 
         DB::beginTransaction();
         try {
