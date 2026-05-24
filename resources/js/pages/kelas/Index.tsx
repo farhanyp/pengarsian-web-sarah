@@ -41,13 +41,6 @@ export default function KelasPage({ classes, filters }: Props) {
               Kelola dan pantau data kelas secara terpusat.
             </p>
           </div>
-
-          <div className="flex items-center gap-2 mt-2 md:mt-0">
-            <button className="w-full md:w-auto justify-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center gap-2">
-              <Download className="w-4 h-4" />
-              Unduh Laporan
-            </button>
-          </div>
         </div>
       </header>
 
@@ -151,8 +144,8 @@ export default function KelasPage({ classes, filters }: Props) {
                       key={i}
                       href={link.url}
                       className={`px-3 py-1.5 text-sm rounded-lg transition-all ${link.active
-                          ? 'bg-indigo-600 text-white font-bold shadow-sm'
-                          : 'text-muted-foreground hover:text-indigo-600 hover:bg-indigo-500/10'
+                        ? 'bg-indigo-600 text-white font-bold shadow-sm'
+                        : 'text-muted-foreground hover:text-indigo-600 hover:bg-indigo-500/10'
                         }`}
                       dangerouslySetInnerHTML={{ __html: link.label }}
                     />
