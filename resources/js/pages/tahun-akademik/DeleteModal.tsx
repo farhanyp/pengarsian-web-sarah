@@ -3,11 +3,7 @@ import { FormEvent } from 'react';
 import { X, Loader2, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface AcademicYear {
-  id: string | number;
-  year: string;
-  is_active: boolean;
-}
+import { AcademicYear } from '@/types/tahun-akademik';
 
 interface Props {
   isOpen: boolean;

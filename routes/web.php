@@ -7,12 +7,12 @@ use App\Http\Controllers\StudentController;
 Route::middleware(['auth', 'verified'])->group(function () {
     
     // Semua role (ADMIN, GURU, SISWA) bisa akses dashboard
-    Route::middleware(['role:ADMIN|GURU|SISWA'])->group(function () {
+    Route::middleware(['role:ADMIN|GURU|SISWA|SUPERADMIN'])->group(function () {
         Route::inertia('/', 'dashboard')->name('dashboard');
     });
 
     // Contoh: Hanya ADMIN dan GURU yang bisa akses rute ini
-    Route::middleware(['role:ADMIN|GURU'])->group(function () {
+    Route::middleware(['role:ADMIN|GURU|SUPERADMIN'])->group(function () {
         Route::get('/data-siswa', [StudentController::class, 'index'])->name('data-siswa.index');
         Route::post('/data-siswa', [StudentController::class, 'store'])->name('data-siswa.store');
         Route::put('/data-siswa/{student}', [StudentController::class, 'update'])->name('data-siswa.update');
@@ -39,6 +39,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/mata-pelajaran', [\App\Http\Controllers\SubjectController::class, 'store'])->name('mata-pelajaran.store');
         Route::put('/mata-pelajaran/{subject}', [\App\Http\Controllers\SubjectController::class, 'update'])->name('mata-pelajaran.update');
         Route::delete('/mata-pelajaran/{subject}', [\App\Http\Controllers\SubjectController::class, 'destroy'])->name('mata-pelajaran.destroy');
+
+        Route::get('/dokumen', [\App\Http\Controllers\DocumentController::class, 'index'])->name('dokumen.index');
+        Route::post('/dokumen', [\App\Http\Controllers\DocumentController::class, 'store'])->name('dokumen.store');
+        Route::put('/dokumen/{document}', [\App\Http\Controllers\DocumentController::class, 'update'])->name('dokumen.update');
+        Route::delete('/dokumen/{document}', [\App\Http\Controllers\DocumentController::class, 'destroy'])->name('dokumen.destroy');
+    });
+
+
+    // Hanya SUPERADMIN yang bisa akses rute ini
+    Route::middleware(['role:SUPERADMIN'])->group(function () {
+        Route::get('/users', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
+        Route::put('/users/{user}/role', [\App\Http\Controllers\UserController::class, 'updateRole'])->name('users.updateRole');
     });
 
 });

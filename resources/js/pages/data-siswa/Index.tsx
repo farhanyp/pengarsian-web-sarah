@@ -6,35 +6,7 @@ import EditModal from './EditModal';
 import DeleteModal from './DeleteModal';
 import { Option } from '@/components/SearchableSelect';
 
-interface StudentClass {
-  id: string | number;
-  name: string;
-  pivot: {
-    academic_year: string;
-  };
-}
-
-interface Student {
-  id: string;
-  nis: string;
-  nisn: string;
-  name: string;
-  classes?: StudentClass[];
-}
-
-interface PaginationLink {
-  url: string | null;
-  label: string;
-  active: boolean;
-}
-
-interface StudentsPaginated {
-  data: Student[];
-  links: PaginationLink[];
-  from: number;
-  to: number;
-  total: number;
-}
+import { Student, StudentsPaginated } from '@/types/data-siswa';
 
 interface Props {
   students: StudentsPaginated;

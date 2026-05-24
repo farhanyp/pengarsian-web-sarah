@@ -4,22 +4,7 @@ import { X, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import SearchableSelect, { Option } from '@/components/SearchableSelect';
 
-interface Student {
-  id: string;
-  nis: string;
-  name: string;
-}
-
-interface Subject {
-  id: string;
-  name: string;
-}
-
-interface GradeCategory {
-  id: string;
-  name: string;
-  default_weight: number;
-}
+import { Student, Subject, GradeCategory } from '@/types/nilai-siswa';
 
 interface Props {
   isOpen: boolean;

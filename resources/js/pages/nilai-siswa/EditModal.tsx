@@ -3,33 +3,7 @@ import { FormEvent, useEffect } from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface Student {
-  id: string;
-  nis: string;
-  name: string;
-}
-
-interface Subject {
-  id: string;
-  name: string;
-}
-
-interface GradeCategory {
-  id: string;
-  name: string;
-  default_weight: number;
-}
-
-interface Grade {
-  id: string;
-  student_id: string;
-  subject_id: string;
-  grade_category_id: string;
-  title: string;
-  score: number | null;
-  semester: string;
-  academic_year: string;
-}
+import { Student, Subject, GradeCategory, Grade } from '@/types/nilai-siswa';
 
 interface Props {
   isOpen: boolean;

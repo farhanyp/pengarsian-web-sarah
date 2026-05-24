@@ -4,21 +4,7 @@ import { X, Loader2, FileSpreadsheet, Upload, AlertCircle, CheckCircle, Download
 import { toast } from 'sonner';
 import SearchableSelect, { Option } from '@/components/SearchableSelect';
 
-interface Student {
-  id: string;
-  nis: string;
-  name: string;
-}
-
-interface Subject {
-  id: string;
-  name: string;
-}
-
-interface AcademicYearOption {
-  id: string;
-  name: string;
-}
+import { Student, Subject, AcademicYearOption } from '@/types/nilai-siswa';
 
 interface Props {
   isOpen: boolean;

@@ -39,13 +39,14 @@ export interface SidebarProps {
 // ---------------------------------------------------------------------------
 
 export const navItems: NavItem[] = [
-    { name: 'Dashboard', icon: LayoutDashboard, path: '/', roles: ['ADMIN', 'GURU', 'SISWA'] },
-    { name: 'Tahun Akademik', icon: Calendar, path: '/tahun-akademik', roles: ['ADMIN', 'GURU'] },
-    { name: 'Kelas', icon: UserRound, path: '/kelas', roles: ['ADMIN', 'GURU'] },
-    { name: 'Mata Pelajaran', icon: BookOpen, path: '/mata-pelajaran', roles: ['ADMIN', 'GURU'] },
-    { name: 'Data Siswa', icon: Users, path: '/data-siswa', roles: ['ADMIN', 'GURU'] },
-    { name: 'Data Nilai Siswa', icon: GraduationCap, path: '/data-nilai-siswa', roles: ['ADMIN', 'GURU'] },
-    { name: 'Repositori Dokumen', icon: Database, path: '/repository' }, // Kosong/tidak ada roles = bisa diakses semua
+    { name: 'Dashboard', icon: LayoutDashboard, path: '/', roles: ['ADMIN', 'GURU', 'KEPALASEKOLAH', "SUPERADMIN"] },
+    { name: 'Manajemen Pengguna', icon: Users, path: '/users', roles: ['SUPERADMIN'] },
+    { name: 'Tahun Akademik', icon: Calendar, path: '/tahun-akademik', roles: ['ADMIN', 'GURU', 'KEPALASEKOLAH', "SUPERADMIN"] },
+    { name: 'Kelas', icon: UserRound, path: '/kelas', roles: ['ADMIN', 'GURU', 'KEPALASEKOLAH', "SUPERADMIN"] },
+    { name: 'Mata Pelajaran', icon: BookOpen, path: '/mata-pelajaran', roles: ['ADMIN', 'GURU', 'KEPALASEKOLAH', "SUPERADMIN"] },
+    { name: 'Data Siswa', icon: Users, path: '/data-siswa', roles: ['ADMIN', 'GURU', 'KEPALASEKOLAH', "SUPERADMIN"] },
+    { name: 'Data Nilai Siswa', icon: GraduationCap, path: '/data-nilai-siswa', roles: ['ADMIN', 'GURU', 'KEPALASEKOLAH', "SUPERADMIN"] },
+    { name: 'Repositori Dokumen', icon: Database, path: '/dokumen', roles: ['ADMIN', 'GURU', 'KEPALASEKOLAH', "SUPERADMIN"] },
 ];
 
 // ---------------------------------------------------------------------------

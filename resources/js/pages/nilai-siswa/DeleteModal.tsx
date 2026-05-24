@@ -3,16 +3,7 @@ import { FormEvent } from 'react';
 import { AlertTriangle, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface Student {
-  name: string;
-  nis: string;
-}
-
-interface Grade {
-  id: string;
-  title: string;
-  student: Student;
-}
+import { Grade } from '@/types/nilai-siswa';
 
 interface Props {
   isOpen: boolean;

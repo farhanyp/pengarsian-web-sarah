@@ -3,12 +3,7 @@ import { FormEvent, useEffect } from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface Student {
-  id: string;
-  nis: string;
-  nisn: string;
-  name: string;
-}
+import { Student } from '@/types/data-siswa';
 
 interface Props {
   isOpen: boolean;

@@ -5,25 +5,7 @@ import CreateModal from './CreateModal';
 import EditModal from './EditModal';
 import DeleteModal from './DeleteModal';
 
-interface AcademicYear {
-  id: string | number;
-  year: string;
-  is_active: boolean;
-}
-
-interface PaginationLink {
-  url: string | null;
-  label: string;
-  active: boolean;
-}
-
-interface AcademicYearsPaginated {
-  data: AcademicYear[];
-  links: PaginationLink[];
-  from: number;
-  to: number;
-  total: number;
-}
+import { AcademicYear, AcademicYearsPaginated } from '@/types/tahun-akademik';
 
 interface Props {
   academicYears: AcademicYearsPaginated;

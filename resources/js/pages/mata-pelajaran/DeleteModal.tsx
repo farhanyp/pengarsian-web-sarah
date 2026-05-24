@@ -3,10 +3,7 @@ import { FormEvent } from 'react';
 import { AlertTriangle, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface Subject {
-  id: string | number;
-  name: string;
-}
+import { Subject } from '@/types/mata-pelajaran';
 
 interface Props {
   isOpen: boolean;

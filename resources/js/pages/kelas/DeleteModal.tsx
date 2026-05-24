@@ -3,10 +3,7 @@ import { FormEvent } from 'react';
 import { X, Loader2, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface SchoolClass {
-  id: string | number;
-  name: string;
-}
+import { SchoolClass } from '@/types/kelas';
 
 interface Props {
   isOpen: boolean;

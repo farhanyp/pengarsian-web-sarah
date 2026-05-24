@@ -5,24 +5,7 @@ import CreateModal from './CreateModal';
 import EditModal from './EditModal';
 import DeleteModal from './DeleteModal';
 
-interface SchoolClass {
-  id: string | number;
-  name: string;
-}
-
-interface PaginationLink {
-  url: string | null;
-  label: string;
-  active: boolean;
-}
-
-interface ClassesPaginated {
-  data: SchoolClass[];
-  links: PaginationLink[];
-  from: number;
-  to: number;
-  total: number;
-}
+import { SchoolClass, ClassesPaginated } from '@/types/kelas';
 
 interface Props {
   classes: ClassesPaginated;

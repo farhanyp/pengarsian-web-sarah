@@ -5,24 +5,7 @@ import CreateModal from './CreateModal';
 import EditModal from './EditModal';
 import DeleteModal from './DeleteModal';
 
-interface Subject {
-  id: string | number;
-  name: string;
-}
-
-interface PaginationLink {
-  url: string | null;
-  label: string;
-  active: boolean;
-}
-
-interface SubjectsPaginated {
-  data: Subject[];
-  links: PaginationLink[];
-  from: number;
-  to: number;
-  total: number;
-}
+import { Subject, SubjectsPaginated } from '@/types/mata-pelajaran';
 
 interface Props {
   subjects: SubjectsPaginated;
