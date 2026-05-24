@@ -1,10 +1,10 @@
 import { Head, usePage } from '@inertiajs/react';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import type { User } from '@/types';
-import { 
-    Users, Star, FileText, TrendingUp, 
-    BarChart, Table, FileArchive, File, 
-    MoreVertical, ArrowRight, Filter, ExternalLink 
+import {
+    Users, Star, FileText, TrendingUp,
+    BarChart, Table, FileArchive, File,
+    MoreVertical, ArrowRight, Filter, ExternalLink
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -181,12 +181,6 @@ export default function DashboardPage() {
                             </p>
                         </div>
                     </div>
-
-                    {/* Live indicator */}
-                    <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20">
-                        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                        <span className="text-xs font-semibold text-green-600 dark:text-green-400">Live</span>
-                    </div>
                 </div>
             </header>
 
@@ -197,32 +191,12 @@ export default function DashboardPage() {
                 <section aria-labelledby="metrics-heading" className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <h2 id="metrics-heading" className="sr-only">Metrik utama</h2>
 
-                    {METRIC_CARDS.map((card) => (
+                    {[1, 2, 3].map((i) => (
                         <div
-                            key={card.label}
-                            className="group bg-background/60 backdrop-blur-xl border border-border/50 p-7 rounded-2xl flex flex-col justify-between h-[190px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.20)] hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
+                            key={i}
+                            className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
                         >
-                            <div className="flex justify-between items-start">
-                                {/* Icon */}
-                                <div
-                                    className={`p-3 ${card.iconBg} ${card.iconColor} rounded-xl group-hover:scale-110 transition-transform duration-300`}
-                                >
-                                    <card.icon className="w-7 h-7" strokeWidth={2.5} />
-                                </div>
-
-                                {/* Badge */}
-                                <div className={`flex items-center gap-1.5 ${card.badgeBg} ${card.badgeColor} px-2.5 py-1 rounded-full`}>
-                                    {card.badge === '+4.2%' && (
-                                        <TrendingUp className="w-3.5 h-3.5" strokeWidth={3} />
-                                    )}
-                                    <span className="text-xs font-bold">{card.badge}</span>
-                                </div>
-                            </div>
-
-                            <div>
-                                <p className="text-4xl font-black text-foreground tracking-tight">{card.value}</p>
-                                <p className="text-sm text-muted-foreground font-semibold mt-1">{card.label}</p>
-                            </div>
+                            <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
                         </div>
                     ))}
                 </section>
@@ -301,26 +275,8 @@ export default function DashboardPage() {
                             </button>
                         </div>
 
-                        <div className="space-y-1 flex-grow overflow-y-auto pr-1 -mr-1">
-                            {RECENT_DOCS.map((doc) => (
-                                <div
-                                    key={doc.name}
-                                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted/60 transition-all cursor-pointer group"
-                                >
-                                    {/* File icon */}
-                                    <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center text-muted-foreground group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors shrink-0">
-                                        <doc.icon className="w-5 h-5" strokeWidth={2.5} />
-                                    </div>
-
-                                    {/* File info */}
-                                    <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-semibold truncate text-foreground">{doc.name}</p>
-                                        <p className="text-[11px] text-muted-foreground mt-0.5">{doc.meta}</p>
-                                    </div>
-
-                                    <MoreVertical className="w-4.5 h-4.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" strokeWidth={2.5} />
-                                </div>
-                            ))}
+                        <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border mt-2">
+                            <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
                         </div>
 
                         <button className="mt-6 w-full py-2.5 border border-border/60 rounded-xl text-sm font-semibold text-muted-foreground hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-500/40 hover:bg-indigo-500/5 transition-all duration-200">
@@ -346,10 +302,6 @@ export default function DashboardPage() {
                         </div>
 
                         <div className="flex items-center gap-4">
-                            <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                                <span className="text-sm font-medium text-muted-foreground">Live Update</span>
-                            </div>
                             <button
                                 className="p-2 bg-background border border-border/50 shadow-sm hover:border-indigo-500/50 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all"
                                 aria-label="Filter tabel"
@@ -360,70 +312,8 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Responsive table */}
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left">
-                            <thead>
-                                <tr className="bg-muted/30 text-[10px] text-muted-foreground uppercase tracking-widest">
-                                    <th className="px-8 py-4 font-semibold">Nama Siswa</th>
-                                    <th className="px-6 py-4 font-semibold">NISN</th>
-                                    <th className="px-6 py-4 font-semibold">Jurusan</th>
-                                    <th className="px-6 py-4 font-semibold">Nilai</th>
-                                    <th className="px-6 py-4 font-semibold">Status</th>
-                                    <th className="px-6 py-4 font-semibold text-right">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-border/40">
-                                {TOP_STUDENTS.map((student, idx) => (
-                                    <tr
-                                        key={student.nisn}
-                                        className="hover:bg-muted/30 transition-colors group"
-                                    >
-                                        {/* Name + avatar */}
-                                        <td className="px-8 py-4">
-                                            <div className="flex items-center gap-3">
-                                                {/* Avatar initials */}
-                                                <div
-                                                    className={`w-9 h-9 rounded-full bg-gradient-to-br ${student.avatarGradient} flex items-center justify-center text-white text-xs font-bold shrink-0 shadow-sm`}
-                                                >
-                                                    {student.avatarInitials}
-                                                </div>
-                                                <div>
-                                                    <p className="text-sm font-semibold text-foreground">{student.name}</p>
-                                                    <p className="text-[11px] text-muted-foreground">Rank #{idx + 1}</p>
-                                                </div>
-                                            </div>
-                                        </td>
-
-                                        <td className="px-6 py-4 text-sm text-muted-foreground font-mono">
-                                            {student.nisn}
-                                        </td>
-
-                                        <td className="px-6 py-4 text-sm font-medium text-foreground">
-                                            {student.major}
-                                        </td>
-
-                                        <td className="px-6 py-4">
-                                            <span className="text-sm font-black text-indigo-600 dark:text-indigo-400">
-                                                {student.score.toFixed(1)}
-                                            </span>
-                                        </td>
-
-                                        <td className="px-6 py-4">
-                                            <StatusBadge status={student.status} />
-                                        </td>
-
-                                        <td className="px-6 py-4 text-right">
-                                            <button
-                                                className="text-muted-foreground group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors p-1.5 rounded-lg hover:bg-indigo-500/10"
-                                                aria-label={`Lihat detail ${student.name}`}
-                                            >
-                                                <ExternalLink className="w-4.5 h-4.5" strokeWidth={2.5} />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                    <div className="relative h-[400px] overflow-hidden border-t border-sidebar-border/70 dark:border-sidebar-border bg-background/50">
+                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
                     </div>
                 </section>
             </div>
