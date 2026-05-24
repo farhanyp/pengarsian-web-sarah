@@ -14,11 +14,20 @@ class StudentGrade extends Model
     protected $fillable = [
         'student_id',
         'subject_id',
-        'score',
+        'grade_category_id',
+        'title',
+        'assignment_score',
+        'exam_score',
+        'final_score',
         'semester',
         'academic_year',
         'created_by'
     ];
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(GradeCategory::class, 'grade_category_id');
+    }
 
     public function student(): BelongsTo
     {

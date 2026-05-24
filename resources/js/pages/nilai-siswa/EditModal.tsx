@@ -1,0 +1,246 @@
+import { useForm } from '@inertiajs/react';
+import { FormEvent, useEffect } from 'react';
+import { X, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
+
+interface Student {
+  id: string;
+  nis: string;
+  name: string;
+}
+
+interface Subject {
+  id: string;
+  name: string;
+}
+
+interface Grade {
+  id: string;
+  student_id: string;
+  subject_id: string;
+  assignment_score: number | null;
+  exam_score: number | null;
+  final_score: number | null;
+  semester: string;
+  academic_year: string;
+}
+
+interface Props {
+  isOpen: boolean;
+  onClose: () => void;
+  grade: Grade | null;
+  students: Student[];
+  subjects: Subject[];
+}
+
+export default function EditModal({ isOpen, onClose, grade, students, subjects }: Props) {
+  const { data, setData, put, processing, errors, reset } = useForm({
+    student_id: '',
+    subject_id: '',
+    assignment_score: '',
+    exam_score: '',
+    semester: 'Ganjil',
+    academic_year: '2025/2026',
+  });
+
+  useEffect(() => {
+    if (grade) {
+      setData({
+        student_id: grade.student_id,
+        subject_id: grade.subject_id,
+        assignment_score: grade.assignment_score?.toString() || '',
+        exam_score: grade.exam_score?.toString() || '',
+        semester: grade.semester,
+        academic_year: grade.academic_year,
+      });
+    }
+  }, [grade]);
+
+  if (!isOpen || !grade) return null;
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    put(`/data-nilai-siswa/${grade.id}`, {
+      onSuccess: () => {
+        toast.success("Data nilai berhasil diperbarui!");
+        reset();
+        onClose();
+      },
+      onError: () => {
+        toast.error("Gagal memperbarui data. Periksa kembali form isian.");
+      }
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+        onClick={onClose}
+      />
+
+      {/* Modal Content */}
+      <div className="relative bg-background w-full max-w-lg rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.30)] overflow-hidden flex flex-col border border-border/50 animate-in fade-in zoom-in duration-200 m-4">
+        <div className="p-6 border-b border-border/50 flex items-center justify-between bg-muted/20">
+          <h3 className="text-xl font-bold tracking-tight text-foreground">Edit Data Nilai</h3>
+          <button 
+            type="button"
+            onClick={onClose}
+            className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="flex flex-col">
+          <div className="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
+            
+            {/* Student Select */}
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">Siswa</label>
+              <select
+                value={data.student_id}
+                onChange={e => setData('student_id', e.target.value)}
+                className={`w-full px-4 py-2.5 bg-muted hover:bg-muted border rounded-xl text-sm text-muted-foreground outline-none transition-all ${
+                  errors.student_id 
+                    ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
+                    : 'border-border/50 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50'
+                }`}
+                disabled
+                required
+              >
+                <option value="">-- Pilih Siswa --</option>
+                {students.map(student => (
+                  <option key={student.id} value={student.id}>{student.nis} - {student.name}</option>
+                ))}
+              </select>
+              {errors.student_id && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.student_id}</p>}
+            </div>
+
+            {/* Subject Select */}
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">Mata Pelajaran</label>
+              <select
+                value={data.subject_id}
+                onChange={e => setData('subject_id', e.target.value)}
+                className={`w-full px-4 py-2.5 bg-muted hover:bg-muted border rounded-xl text-sm text-muted-foreground outline-none transition-all ${
+                  errors.subject_id 
+                    ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
+                    : 'border-border/50 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50'
+                }`}
+                disabled
+                required
+              >
+                <option value="">-- Pilih Mata Pelajaran --</option>
+                {subjects.map(subject => (
+                  <option key={subject.id} value={subject.id}>{subject.name}</option>
+                ))}
+              </select>
+              {errors.subject_id && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.subject_id}</p>}
+            </div>
+
+            {/* Scores */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-foreground mb-1.5">Nilai Tugas</label>
+                <input
+                  type="number"
+                  min="0" max="100" step="0.01"
+                  value={data.assignment_score}
+                  onChange={e => setData('assignment_score', e.target.value)}
+                  className={`w-full px-4 py-2.5 bg-background hover:bg-muted/50 border rounded-xl text-sm text-foreground outline-none transition-all ${
+                    errors.assignment_score 
+                      ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
+                      : 'border-border/50 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50'
+                  }`}
+                  placeholder="0 - 100"
+                  disabled={processing}
+                />
+                {errors.assignment_score && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.assignment_score}</p>}
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-foreground mb-1.5">Nilai Ujian</label>
+                <input
+                  type="number"
+                  min="0" max="100" step="0.01"
+                  value={data.exam_score}
+                  onChange={e => setData('exam_score', e.target.value)}
+                  className={`w-full px-4 py-2.5 bg-background hover:bg-muted/50 border rounded-xl text-sm text-foreground outline-none transition-all ${
+                    errors.exam_score 
+                      ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
+                      : 'border-border/50 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50'
+                  }`}
+                  placeholder="0 - 100"
+                  disabled={processing}
+                />
+                {errors.exam_score && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.exam_score}</p>}
+              </div>
+            </div>
+
+            {/* Period */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-foreground mb-1.5">Semester</label>
+                <select
+                  value={data.semester}
+                  onChange={e => setData('semester', e.target.value)}
+                  className={`w-full px-4 py-2.5 bg-background hover:bg-muted/50 border rounded-xl text-sm text-foreground outline-none transition-all ${
+                    errors.semester 
+                      ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
+                      : 'border-border/50 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50'
+                  }`}
+                  disabled={processing}
+                  required
+                >
+                  <option value="Ganjil">Ganjil</option>
+                  <option value="Genap">Genap</option>
+                </select>
+                {errors.semester && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.semester}</p>}
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-foreground mb-1.5">Tahun Ajaran</label>
+                <input
+                  type="text"
+                  value={data.academic_year}
+                  onChange={e => setData('academic_year', e.target.value)}
+                  className={`w-full px-4 py-2.5 bg-background hover:bg-muted/50 border rounded-xl text-sm text-foreground outline-none transition-all ${
+                    errors.academic_year 
+                      ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
+                      : 'border-border/50 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50'
+                  }`}
+                  placeholder="Contoh: 2025/2026"
+                  disabled={processing}
+                  required
+                />
+                {errors.academic_year && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.academic_year}</p>}
+              </div>
+            </div>
+
+          </div>
+
+          <div className="p-6 border-t border-border/50 flex items-center justify-end gap-3 bg-muted/20">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={processing}
+              className="px-5 py-2.5 text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted rounded-xl transition-colors disabled:opacity-50"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              disabled={processing}
+              className="flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl active:scale-[0.98] transition-all shadow-sm disabled:opacity-70"
+            >
+              {processing && <Loader2 className="w-4 h-4 animate-spin" />}
+              {processing ? 'Menyimpan...' : 'Simpan Perubahan'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}

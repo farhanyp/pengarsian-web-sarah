@@ -21,4 +21,11 @@ class Student extends Model
     {
         return $this->hasMany(StudentGrade::class);
     }
+
+    public function classes(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(SchoolClass::class, 'class_student', 'student_id', 'class_id')
+                    ->withPivot('academic_year')
+                    ->withTimestamps();
+    }
 }

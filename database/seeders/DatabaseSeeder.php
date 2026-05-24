@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
 
         // c. User Guru
         $guruUser = User::firstOrCreate(
-            ['email' => 'guru@scholarsys.edu'],
+            ['email' => 'guru@gmail.com'],
             [
                 'name' => 'Guru Pengajar',
                 'password' => Hash::make('password'),
@@ -61,5 +61,33 @@ class DatabaseSeeder extends Seeder
             ]
         );
         $kepsekUser->assignRole($kepsekRole);
+
+        // 3. Create Academic Years
+        $academicYears = [
+            ['year' => '2023/2024', 'is_active' => false],
+            ['year' => '2024/2025', 'is_active' => false],
+            ['year' => '2025/2026', 'is_active' => true],
+            ['year' => '2026/2027', 'is_active' => false],
+        ];
+
+        foreach ($academicYears as $ay) {
+            \App\Models\AcademicYear::firstOrCreate(
+                ['year' => $ay['year']],
+                ['is_active' => $ay['is_active']]
+            );
+        }
+
+        // 4. Create Classes
+        $classes = [
+            '10 MIPA 1', '10 MIPA 2', '10 IPS 1', '10 IPS 2',
+            '11 MIPA 1', '11 MIPA 2', '11 IPS 1', '11 IPS 2',
+            '12 MIPA 1', '12 MIPA 2', '12 IPS 1', '12 IPS 2',
+        ];
+
+        foreach ($classes as $className) {
+            \App\Models\SchoolClass::firstOrCreate(
+                ['name' => $className]
+            );
+        }
     }
 }
