@@ -29,7 +29,7 @@ export default function UsersManagementPage({ users, filters }: Props) {
     SUPERADMIN: { bg: 'bg-red-500/10', text: 'text-red-600 dark:text-red-400', icon: ShieldAlert },
     ADMIN: { bg: 'bg-orange-500/10', text: 'text-orange-600 dark:text-orange-400', icon: ShieldCheck },
     GURU: { bg: 'bg-blue-500/10', text: 'text-blue-600 dark:text-blue-400', icon: UserIcon },
-    KEPALASEKOLAH: { bg: 'bg-green-500/10', text: 'text-green-600 dark:text-green-400', icon: UserIcon },
+    KEPALA_SEKOLAH: { bg: 'bg-green-500/10', text: 'text-green-600 dark:text-green-400', icon: UserIcon },
   };
 
   if (!isSuperadmin) {

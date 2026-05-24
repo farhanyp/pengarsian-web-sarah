@@ -15,7 +15,7 @@ const ROLES = [
   { value: 'SUPERADMIN', label: 'Super Administrator', icon: ShieldAlert, color: 'text-red-500' },
   { value: 'ADMIN', label: 'Administrator', icon: ShieldCheck, color: 'text-orange-500' },
   { value: 'GURU', label: 'Guru', icon: UserIcon, color: 'text-blue-500' },
-  { value: 'KEPALASEKOLAH', label: 'Kepala Sekolah', icon: UserIcon, color: 'text-green-500' }
+  { value: 'KEPALA_SEKOLAH', label: 'Kepala Sekolah', icon: UserIcon, color: 'text-green-500' }
 ];
 
 export default function EditRoleModal({ isOpen, onClose, user }: Props) {

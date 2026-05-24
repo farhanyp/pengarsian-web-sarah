@@ -6,19 +6,19 @@ use App\Http\Controllers\StudentController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
     
-    // Semua role (ADMIN, GURU, SISWA) bisa akses dashboard
-    Route::middleware(['role:ADMIN|GURU|SISWA|SUPERADMIN'])->group(function () {
+    // Semua role (ADMIN, GURU, KEPALA_SEKOLAH) bisa akses dashboard
+    Route::middleware(['role:ADMIN|GURU|KEPALA_SEKOLAH|SUPERADMIN'])->group(function () {
         Route::inertia('/', 'dashboard')->name('dashboard');
     });
 
-    // Akses READ (Index) untuk berbagai fitur yang diperbolehkan bagi GURU & KEPALASEKOLAH
-    Route::middleware(['role:ADMIN|GURU|SUPERADMIN|KEPALASEKOLAH'])->group(function () {
+    // Akses READ (Index) untuk berbagai fitur yang diperbolehkan bagi GURU & KEPALA_SEKOLAH
+    Route::middleware(['role:ADMIN|GURU|SUPERADMIN|KEPALA_SEKOLAH'])->group(function () {
         Route::get('/data-siswa', [StudentController::class, 'index'])->name('data-siswa.index');
         Route::get('/data-nilai-siswa', [\App\Http\Controllers\StudentGradeController::class, 'index'])->name('data-nilai-siswa.index');
     });
 
     // Akses READ Dokumen (GURU tidak memiliki akses)
-    Route::middleware(['role:ADMIN|SUPERADMIN|KEPALASEKOLAH'])->group(function () {
+    Route::middleware(['role:ADMIN|SUPERADMIN|KEPALA_SEKOLAH'])->group(function () {
         Route::get('/dokumen', [\App\Http\Controllers\DocumentController::class, 'index'])->name('dokumen.index');
     });
 

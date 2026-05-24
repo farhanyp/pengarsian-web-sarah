@@ -143,7 +143,6 @@ export default function DataSiswaPage({ students, availableClasses, availableAca
                         <span className="px-2.5 py-1 bg-muted text-muted-foreground rounded-full text-xs font-bold">-</span>
                       )}
                     </td>
-                    </td>
                     {canEdit && (
                       <td className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">

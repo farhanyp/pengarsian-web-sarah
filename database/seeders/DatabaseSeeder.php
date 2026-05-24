@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
 
         // c. User Guru
         $guruUser = User::firstOrCreate(
-            ['email' => 'guru@gmail.com'],
+            ['email' => 'guru@scholarsys.edu'],
             [
                 'name' => 'Guru Pengajar',
                 'password' => Hash::make('password'),

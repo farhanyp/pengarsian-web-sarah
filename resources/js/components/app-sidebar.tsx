@@ -39,14 +39,14 @@ export interface SidebarProps {
 // ---------------------------------------------------------------------------
 
 export const navItems: NavItem[] = [
-    { name: 'Dashboard', icon: LayoutDashboard, path: '/', roles: ['ADMIN', 'GURU', 'KEPALASEKOLAH', "SUPERADMIN"] },
+    { name: 'Dashboard', icon: LayoutDashboard, path: '/', roles: ['ADMIN', 'GURU', 'KEPALA_SEKOLAH', "SUPERADMIN"] },
     { name: 'Manajemen Pengguna', icon: Users, path: '/users', roles: ['SUPERADMIN'] },
     { name: 'Tahun Akademik', icon: Calendar, path: '/tahun-akademik', roles: ['ADMIN', 'SUPERADMIN'] },
     { name: 'Kelas', icon: UserRound, path: '/kelas', roles: ['ADMIN', 'SUPERADMIN'] },
-    { name: 'Mata Pelajaran', icon: BookOpen, path: '/mata-pelajaran', roles: ['ADMIN', 'GURU', 'KEPALASEKOLAH', "SUPERADMIN"] },
-    { name: 'Data Siswa', icon: Users, path: '/data-siswa', roles: ['ADMIN', 'GURU', 'KEPALASEKOLAH', "SUPERADMIN"] },
-    { name: 'Data Nilai Siswa', icon: GraduationCap, path: '/data-nilai-siswa', roles: ['ADMIN', 'GURU', 'KEPALASEKOLAH', "SUPERADMIN"] },
-    { name: 'Repositori Dokumen', icon: Database, path: '/dokumen', roles: ['ADMIN', 'KEPALASEKOLAH', "SUPERADMIN"] },
+    { name: 'Mata Pelajaran', icon: BookOpen, path: '/mata-pelajaran', roles: ['ADMIN', "SUPERADMIN"] },
+    { name: 'Data Siswa', icon: Users, path: '/data-siswa', roles: ['ADMIN', 'GURU', 'KEPALA_SEKOLAH', "SUPERADMIN"] },
+    { name: 'Data Nilai Siswa', icon: GraduationCap, path: '/data-nilai-siswa', roles: ['ADMIN', 'GURU', 'KEPALA_SEKOLAH', "SUPERADMIN"] },
+    { name: 'Repositori Dokumen', icon: Database, path: '/dokumen', roles: ['ADMIN', 'KEPALA_SEKOLAH', "SUPERADMIN"] },
 ];
 
 // ---------------------------------------------------------------------------
@@ -61,8 +61,6 @@ export function AppSidebar({
     const { auth } = usePage().props as { auth: { user: User } };
     const user = auth.user;
     const getInitials = useInitials();
-
-    // Pastikan role disamakan huruf kapitalnya (jika kosong anggap GUEST)
     const userRole = ((user as any).role || 'GUEST').toUpperCase();
 
     // Filter menu berdasarkan role

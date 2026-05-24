@@ -42,7 +42,7 @@ class UserController extends Controller
         // so it uses Spatie Permission. We will sync the role.
 
         $validated = $request->validate([
-            'role' => ['required', 'string', Rule::in(['SUPERADMIN', 'ADMIN', 'GURU', 'SISWA', 'GUEST'])],
+            'role' => ['required', 'string', Rule::in(['SUPERADMIN', 'ADMIN', 'GURU'])],
         ]);
 
         $user->syncRoles([$validated['role']]);
