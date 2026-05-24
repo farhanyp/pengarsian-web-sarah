@@ -7,6 +7,7 @@ use App\Models\SchoolClass;
 use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Exports\DataSiswaExport;
 
 class StudentController extends Controller
 {
@@ -82,5 +83,17 @@ class StudentController extends Controller
         $student->delete();
 
         return redirect()->back()->with('success', 'Data siswa berhasil dihapus');
+    }
+
+    public function downloadReport(Request $request)
+    {
+        $validated = $request->validate([
+            'tahun_ajaran_id' => 'required|exists:academic_years,year',
+            'kelas_ids' => 'required|array|min:1',
+            'kelas_ids.*' => 'required|exists:classes,id',
+        ]);
+
+        $export = new DataSiswaExport($validated['tahun_ajaran_id'], $validated['kelas_ids']);
+        return $export->download('Laporan_Data_Siswa.xlsx');
     }
 }

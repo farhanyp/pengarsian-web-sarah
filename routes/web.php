@@ -14,7 +14,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Akses READ (Index) untuk berbagai fitur yang diperbolehkan bagi GURU & KEPALA_SEKOLAH
     Route::middleware(['role:ADMIN|GURU|SUPERADMIN|KEPALA_SEKOLAH'])->group(function () {
         Route::get('/data-siswa', [StudentController::class, 'index'])->name('data-siswa.index');
+        Route::get('/data-siswa/download-report', [StudentController::class, 'downloadReport'])->name('data-siswa.download-report');
         Route::get('/data-nilai-siswa', [\App\Http\Controllers\StudentGradeController::class, 'index'])->name('data-nilai-siswa.index');
+        Route::get('/data-nilai-siswa/download-report', [\App\Http\Controllers\StudentGradeController::class, 'downloadReport'])->name('data-nilai-siswa.download-report');
     });
 
     // Akses READ Dokumen (GURU tidak memiliki akses)

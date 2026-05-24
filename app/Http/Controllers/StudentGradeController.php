@@ -7,6 +7,8 @@ use App\Models\Student;
 use App\Models\Subject;
 use App\Models\GradeCategory;
 use App\Models\AcademicYear;
+use App\Models\SchoolClass;
+use App\Exports\NilaiSiswaExport;
 use App\Services\ExcelGradeImportService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -42,6 +44,7 @@ class StudentGradeController extends Controller
         return Inertia::render('nilai-siswa/Index', [
             'grades' => $grades,
             'students' => Student::select('id', 'name', 'nis')->orderBy('name')->get(),
+            'classes' => SchoolClass::select('id', 'name')->orderBy('name')->get(),
             'subjects' => Subject::select('id', 'name')->orderBy('name')->get(),
             'gradeCategories' => GradeCategory::select('id', 'name', 'default_weight')->orderBy('id')->get(),
             'availableAcademicYears' => $availableAcademicYears,
@@ -248,5 +251,30 @@ class StudentGradeController extends Controller
                 'Cache-Control' => 'max-age=0',
             ]
         );
+    }
+
+    public function downloadReport(Request $request)
+    {
+        $request->validate([
+            'academic_year' => 'nullable|string',
+            'semester_ids' => 'nullable|array',
+            'semester_ids.*' => 'string',
+            'class_ids' => 'nullable|array',
+            'class_ids.*' => 'integer',
+            'mapel_ids' => 'nullable|array',
+            'mapel_ids.*' => 'integer',
+            'siswa_ids' => 'nullable|array',
+            'siswa_ids.*' => 'string',
+        ]);
+
+        $export = new NilaiSiswaExport(
+            $request->input('academic_year'),
+            $request->input('semester_ids', []),
+            $request->input('class_ids', []),
+            $request->input('mapel_ids', []),
+            $request->input('siswa_ids', [])
+        );
+
+        return $export->download();
     }
 }

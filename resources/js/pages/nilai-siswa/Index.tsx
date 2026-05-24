@@ -5,6 +5,7 @@ import CreateModal from './CreateModal';
 import EditModal from './EditModal';
 import DeleteModal from './DeleteModal';
 import ImportModal from './ImportModal';
+import DownloadNilaiModal from './partials/DownloadNilaiModal';
 
 import { Student, Subject, GradeCategory, Grade, GradesPaginated } from '@/types/nilai-siswa';
 
@@ -12,6 +13,7 @@ interface Props {
   grades: GradesPaginated;
   students: Student[];
   subjects: Subject[];
+  classes: { id: number; name: string }[];
   gradeCategories: GradeCategory[];
   availableAcademicYears: { id: string; name: string }[];
   filters: {
@@ -19,13 +21,14 @@ interface Props {
   };
 }
 
-export default function DataNilaiSiswaPage({ grades, students, subjects, gradeCategories, availableAcademicYears, filters }: Props) {
+export default function DataNilaiSiswaPage({ grades, students, subjects, classes, gradeCategories, availableAcademicYears, filters }: Props) {
   const { auth } = usePage<any>().props;
   const canEdit = ['SUPERADMIN', 'ADMIN', 'GURU'].includes(auth?.user?.role);
 
   const [search, setSearch] = useState(filters.search || '');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [editingGrade, setEditingGrade] = useState<Grade | null>(null);
   const [deletingGrade, setDeletingGrade] = useState<Grade | null>(null);
   const [expandedStudentId, setExpandedStudentId] = useState<string | null>(null);
@@ -70,9 +73,12 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, gradeCa
           </div>
 
           <div className="flex items-center gap-2 mt-2 md:mt-0">
-            <button className="w-full md:w-auto justify-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center gap-2">
-              <Download className="w-4 h-4" />
-              Unduh Laporan
+            <button 
+              onClick={() => setIsDownloadModalOpen(true)}
+              className="w-full md:w-auto justify-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center gap-2"
+            >
+              <FileSpreadsheet className="w-4 h-4" />
+              Unduh Laporan Nilai
             </button>
           </div>
         </div>
@@ -330,6 +336,15 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, gradeCa
         onClose={() => setIsImportModalOpen(false)}
         subjects={subjects}
         students={students}
+        availableAcademicYears={availableAcademicYears}
+      />
+
+      <DownloadNilaiModal
+        isOpen={isDownloadModalOpen}
+        onClose={() => setIsDownloadModalOpen(false)}
+        students={students}
+        subjects={subjects}
+        classes={classes}
         availableAcademicYears={availableAcademicYears}
       />
     </>

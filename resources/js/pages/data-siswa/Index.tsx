@@ -4,6 +4,7 @@ import { Search, Filter, Network, UserPlus, Edit2, Trash2, Download } from 'luci
 import CreateModal from './CreateModal';
 import EditModal from './EditModal';
 import DeleteModal from './DeleteModal';
+import DownloadReportModal from './partials/download-report-modal';
 import { Option } from '@/components/SearchableSelect';
 
 import { Student, StudentsPaginated } from '@/types/data-siswa';
@@ -23,6 +24,7 @@ export default function DataSiswaPage({ students, availableClasses, availableAca
 
   const [search, setSearch] = useState(filters.search || '');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [deletingStudent, setDeletingStudent] = useState<Student | null>(null);
 
@@ -49,7 +51,10 @@ export default function DataSiswaPage({ students, availableClasses, availableAca
           </div>
 
           <div className="flex items-center gap-2 mt-2 md:mt-0">
-            <button className="w-full md:w-auto justify-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center gap-2">
+            <button 
+              onClick={() => setIsDownloadModalOpen(true)}
+              className="w-full md:w-auto justify-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center gap-2"
+            >
               <Download className="w-4 h-4" />
               Unduh Laporan
             </button>
@@ -224,6 +229,12 @@ export default function DataSiswaPage({ students, availableClasses, availableAca
         isOpen={!!deletingStudent}
         onClose={() => setDeletingStudent(null)}
         student={deletingStudent}
+      />
+      <DownloadReportModal
+        isOpen={isDownloadModalOpen}
+        onClose={() => setIsDownloadModalOpen(false)}
+        tahunAjaran={availableAcademicYears}
+        kelas={availableClasses}
       />
     </>
   );
