@@ -1,4 +1,4 @@
-import { Head, Link, useForm, router } from '@inertiajs/react';
+import { Head, Link, useForm, router, usePage } from '@inertiajs/react';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
 import {
     Search,
@@ -29,6 +29,9 @@ interface IndexProps {
 }
 
 export default function Index({ documents, filters }: IndexProps) {
+    const { auth } = usePage<any>().props;
+    const canEdit = auth?.user?.role === 'SUPERADMIN' || auth?.user?.role === 'ADMIN';
+
     const [searchQuery, setSearchQuery] = useState(filters.search || '');
 
     // Modal states
@@ -106,22 +109,24 @@ export default function Index({ documents, filters }: IndexProps) {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </form>
-                        <div className="flex gap-2 w-full md:w-auto">
-                            <Button
-                                onClick={() => { setCreateModalType('masuk'); setIsCreateModalOpen(true); }}
-                                className="w-full md:w-auto bg-primary text-primary-foreground px-4 py-5 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all"
-                            >
-                                <Plus className="w-5 h-5" />
-                                Surat Masuk
-                            </Button>
-                            <Button
-                                onClick={() => { setCreateModalType('keluar'); setIsCreateModalOpen(true); }}
-                                className="w-full md:w-auto bg-primary text-primary-foreground px-4 py-5 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all"
-                            >
-                                <Plus className="w-5 h-5" />
-                                Surat Keluar
-                            </Button>
-                        </div>
+                        {canEdit && (
+                            <div className="flex gap-2 w-full md:w-auto">
+                                <Button
+                                    onClick={() => { setCreateModalType('masuk'); setIsCreateModalOpen(true); }}
+                                    className="w-full md:w-auto bg-primary text-primary-foreground px-4 py-5 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all"
+                                >
+                                    <Plus className="w-5 h-5" />
+                                    Surat Masuk
+                                </Button>
+                                <Button
+                                    onClick={() => { setCreateModalType('keluar'); setIsCreateModalOpen(true); }}
+                                    className="w-full md:w-auto bg-primary text-primary-foreground px-4 py-5 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all"
+                                >
+                                    <Plus className="w-5 h-5" />
+                                    Surat Keluar
+                                </Button>
+                            </div>
+                        )}
                     </div>
 
                     <div className="bg-card/50 backdrop-blur-xl rounded-2xl border border-border overflow-hidden shadow-lg flex flex-col flex-1">
@@ -147,7 +152,7 @@ export default function Index({ documents, filters }: IndexProps) {
                                         <th className="px-6 py-4 text-xs text-muted-foreground font-semibold tracking-widest uppercase">Status</th>
                                         <th className="px-6 py-4 text-xs text-muted-foreground font-semibold tracking-widest uppercase">Tanggal Diunggah</th>
                                         <th className="px-6 py-4 text-xs text-muted-foreground font-semibold tracking-widest uppercase">Ukuran</th>
-                                        <th className="px-6 py-4 text-xs text-muted-foreground font-semibold tracking-widest uppercase text-right">Aksi</th>
+                                        {canEdit && <th className="px-6 py-4 text-xs text-muted-foreground font-semibold tracking-widest uppercase text-right">Aksi</th>}
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-border/50">
@@ -190,31 +195,33 @@ export default function Index({ documents, filters }: IndexProps) {
                                                 <td className="px-6 py-4 text-sm text-muted-foreground font-mono">
                                                     {formatBytes(doc.file_size || Math.floor(Math.random() * 5000000))}
                                                 </td>
-                                                <td className="px-6 py-4 text-right space-x-2 whitespace-nowrap">
-                                                    <button
-                                                        onClick={() => {
-                                                            setSelectedDocument(doc);
-                                                            setIsEditModalOpen(true);
-                                                        }}
-                                                        className="text-muted-foreground hover:text-primary hover:bg-primary/10 p-2 rounded transition-all opacity-0 group-hover:opacity-100" title="Edit"
-                                                    >
-                                                        <FileText className="w-5 h-5" />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => {
-                                                            setSelectedDocument(doc);
-                                                            setIsDeleteModalOpen(true);
-                                                        }}
-                                                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 p-2 rounded transition-all opacity-0 group-hover:opacity-100" title="Delete"
-                                                    >
-                                                        <Trash2 className="w-5 h-5" />
-                                                    </button>
-                                                </td>
+                                                {canEdit && (
+                                                    <td className="px-6 py-4 text-right space-x-2 whitespace-nowrap">
+                                                        <button
+                                                            onClick={() => {
+                                                                setSelectedDocument(doc);
+                                                                setIsEditModalOpen(true);
+                                                            }}
+                                                            className="text-muted-foreground hover:text-primary hover:bg-primary/10 p-2 rounded transition-all opacity-0 group-hover:opacity-100" title="Edit"
+                                                        >
+                                                            <FileText className="w-5 h-5" />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => {
+                                                                setSelectedDocument(doc);
+                                                                setIsDeleteModalOpen(true);
+                                                            }}
+                                                            className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 p-2 rounded transition-all opacity-0 group-hover:opacity-100" title="Delete"
+                                                        >
+                                                            <Trash2 className="w-5 h-5" />
+                                                        </button>
+                                                    </td>
+                                                )}
                                             </tr>
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan={6} className="px-6 py-8 text-center text-muted-foreground">
+                                            <td colSpan={canEdit ? 7 : 6} className="px-6 py-8 text-center text-muted-foreground">
                                                 Tidak ada dokumen ditemukan.
                                             </td>
                                         </tr>

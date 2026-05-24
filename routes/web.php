@@ -11,24 +11,43 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::inertia('/', 'dashboard')->name('dashboard');
     });
 
-    // Contoh: Hanya ADMIN dan GURU yang bisa akses rute ini
-    Route::middleware(['role:ADMIN|GURU|SUPERADMIN'])->group(function () {
+    // Akses READ (Index) untuk berbagai fitur yang diperbolehkan bagi GURU & KEPALASEKOLAH
+    Route::middleware(['role:ADMIN|GURU|SUPERADMIN|KEPALASEKOLAH'])->group(function () {
         Route::get('/data-siswa', [StudentController::class, 'index'])->name('data-siswa.index');
+        Route::get('/data-nilai-siswa', [\App\Http\Controllers\StudentGradeController::class, 'index'])->name('data-nilai-siswa.index');
+    });
+
+    // Akses READ Dokumen (GURU tidak memiliki akses)
+    Route::middleware(['role:ADMIN|SUPERADMIN|KEPALASEKOLAH'])->group(function () {
+        Route::get('/dokumen', [\App\Http\Controllers\DocumentController::class, 'index'])->name('dokumen.index');
+    });
+
+    // Hanya ADMIN dan SUPERADMIN yang bisa menambah, mengubah, dan menghapus (Write Access)
+    Route::middleware(['role:ADMIN|SUPERADMIN'])->group(function () {
         Route::post('/data-siswa', [StudentController::class, 'store'])->name('data-siswa.store');
         Route::put('/data-siswa/{student}', [StudentController::class, 'update'])->name('data-siswa.update');
         Route::delete('/data-siswa/{student}', [StudentController::class, 'destroy'])->name('data-siswa.destroy');
 
+        Route::post('/dokumen', [\App\Http\Controllers\DocumentController::class, 'store'])->name('dokumen.store');
+        Route::put('/dokumen/{document}', [\App\Http\Controllers\DocumentController::class, 'update'])->name('dokumen.update');
+        Route::delete('/dokumen/{document}', [\App\Http\Controllers\DocumentController::class, 'destroy'])->name('dokumen.destroy');
+
+        // Modul Kelas
         Route::get('/kelas', [\App\Http\Controllers\SchoolClassController::class, 'index'])->name('kelas.index');
         Route::post('/kelas', [\App\Http\Controllers\SchoolClassController::class, 'store'])->name('kelas.store');
         Route::put('/kelas/{schoolClass}', [\App\Http\Controllers\SchoolClassController::class, 'update'])->name('kelas.update');
         Route::delete('/kelas/{schoolClass}', [\App\Http\Controllers\SchoolClassController::class, 'destroy'])->name('kelas.destroy');
 
+        // Modul Tahun Akademik
         Route::get('/tahun-akademik', [\App\Http\Controllers\AcademicYearController::class, 'index'])->name('tahun-akademik.index');
         Route::post('/tahun-akademik', [\App\Http\Controllers\AcademicYearController::class, 'store'])->name('tahun-akademik.store');
         Route::put('/tahun-akademik/{tahun_akademik}', [\App\Http\Controllers\AcademicYearController::class, 'update'])->name('tahun-akademik.update');
         Route::delete('/tahun-akademik/{tahun_akademik}', [\App\Http\Controllers\AcademicYearController::class, 'destroy'])->name('tahun-akademik.destroy');
+    });
 
-        Route::get('/data-nilai-siswa', [\App\Http\Controllers\StudentGradeController::class, 'index'])->name('data-nilai-siswa.index');
+    // Contoh: ADMIN, GURU, SUPERADMIN (fitur lain selain data-siswa, kelas, tahun akademik)
+    Route::middleware(['role:ADMIN|GURU|SUPERADMIN'])->group(function () {
+
         Route::get('/data-nilai-siswa/template', [\App\Http\Controllers\StudentGradeController::class, 'downloadTemplate'])->name('data-nilai-siswa.template');
         Route::post('/data-nilai-siswa', [\App\Http\Controllers\StudentGradeController::class, 'store'])->name('data-nilai-siswa.store');
         Route::post('/data-nilai-siswa/import', [\App\Http\Controllers\StudentGradeController::class, 'import'])->name('data-nilai-siswa.import');
@@ -39,11 +58,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/mata-pelajaran', [\App\Http\Controllers\SubjectController::class, 'store'])->name('mata-pelajaran.store');
         Route::put('/mata-pelajaran/{subject}', [\App\Http\Controllers\SubjectController::class, 'update'])->name('mata-pelajaran.update');
         Route::delete('/mata-pelajaran/{subject}', [\App\Http\Controllers\SubjectController::class, 'destroy'])->name('mata-pelajaran.destroy');
-
-        Route::get('/dokumen', [\App\Http\Controllers\DocumentController::class, 'index'])->name('dokumen.index');
-        Route::post('/dokumen', [\App\Http\Controllers\DocumentController::class, 'store'])->name('dokumen.store');
-        Route::put('/dokumen/{document}', [\App\Http\Controllers\DocumentController::class, 'update'])->name('dokumen.update');
-        Route::delete('/dokumen/{document}', [\App\Http\Controllers\DocumentController::class, 'destroy'])->name('dokumen.destroy');
     });
 
 

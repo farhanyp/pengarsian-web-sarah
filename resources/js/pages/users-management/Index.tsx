@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Search, ShieldAlert, Edit2, ShieldCheck, Mail, User as UserIcon } from 'lucide-react';
 import EditRoleModal from './EditRoleModal';
 
@@ -13,6 +13,9 @@ interface Props {
 }
 
 export default function UsersManagementPage({ users, filters }: Props) {
+  const { auth } = usePage<any>().props;
+  const isSuperadmin = auth?.user?.role === 'SUPERADMIN';
+
   const [search, setSearch] = useState(filters.search || '');
   const [editingUser, setEditingUser] = useState<UserData | null>(null);
 
@@ -28,6 +31,19 @@ export default function UsersManagementPage({ users, filters }: Props) {
     GURU: { bg: 'bg-blue-500/10', text: 'text-blue-600 dark:text-blue-400', icon: UserIcon },
     KEPALASEKOLAH: { bg: 'bg-green-500/10', text: 'text-green-600 dark:text-green-400', icon: UserIcon },
   };
+
+  if (!isSuperadmin) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[80vh] bg-background text-foreground p-6 text-center">
+        <ShieldAlert className="w-20 h-20 text-red-500 mb-6" />
+        <h1 className="text-3xl font-bold">Akses Ditolak</h1>
+        <p className="text-muted-foreground mt-3 max-w-md">Anda tidak memiliki otorisasi untuk mengakses Manajemen Pengguna. Halaman ini khusus untuk SUPERADMIN.</p>
+        <Link href="/" className="mt-8 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 transition-colors text-white rounded-xl font-bold">
+          Kembali ke Dashboard
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <>

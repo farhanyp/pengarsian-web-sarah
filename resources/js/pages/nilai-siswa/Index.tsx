@@ -1,5 +1,5 @@
 import { useState, useMemo, Fragment } from 'react';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Search, Filter, Plus, Edit2, Trash2, Download, TrendingUp, Trophy, AlertCircle, CheckCircle2, FileSpreadsheet, ChevronDown, ChevronUp } from 'lucide-react';
 import CreateModal from './CreateModal';
 import EditModal from './EditModal';
@@ -20,6 +20,9 @@ interface Props {
 }
 
 export default function DataNilaiSiswaPage({ grades, students, subjects, gradeCategories, availableAcademicYears, filters }: Props) {
+  const { auth } = usePage<any>().props;
+  const canEdit = ['SUPERADMIN', 'ADMIN', 'GURU'].includes(auth?.user?.role);
+
   const [search, setSearch] = useState(filters.search || '');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
@@ -115,22 +118,26 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, gradeCa
               </div>
 
               {/* Import Button */}
-              <button
-                onClick={() => setIsImportModalOpen(true)}
-                className="flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl active:scale-[0.98] transition-all shadow-lg shadow-emerald-600/20 w-full sm:w-auto shrink-0"
-              >
-                <FileSpreadsheet className="w-5 h-5" />
-                <span className="text-sm">Import Excel</span>
-              </button>
+              {canEdit && (
+                <button
+                  onClick={() => setIsImportModalOpen(true)}
+                  className="flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl active:scale-[0.98] transition-all shadow-lg shadow-emerald-600/20 w-full sm:w-auto shrink-0"
+                >
+                  <FileSpreadsheet className="w-5 h-5" />
+                  <span className="text-sm">Import Excel</span>
+                </button>
+              )}
 
               {/* Tambah Button */}
-              <button
-                onClick={() => setIsCreateModalOpen(true)}
-                className="flex items-center justify-center gap-2 px-6 py-2.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-lg shadow-indigo-600/20 w-full sm:w-auto shrink-0"
-              >
-                <Plus className="w-5 h-5" />
-                <span className="text-sm">Tambah Nilai</span>
-              </button>
+              {canEdit && (
+                <button
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className="flex items-center justify-center gap-2 px-6 py-2.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-lg shadow-indigo-600/20 w-full sm:w-auto shrink-0"
+                >
+                  <Plus className="w-5 h-5" />
+                  <span className="text-sm">Tambah Nilai</span>
+                </button>
+              )}
             </div>
           </div>
 
@@ -194,7 +201,7 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, gradeCa
                                       <th className="px-4 py-3 text-xs font-bold text-muted-foreground uppercase">Kategori</th>
                                       <th className="px-4 py-3 text-xs font-bold text-muted-foreground uppercase">Judul Penilaian</th>
                                       <th className="px-4 py-3 text-xs font-bold text-muted-foreground uppercase text-center">Nilai</th>
-                                      <th className="px-4 py-3 text-xs font-bold text-muted-foreground uppercase text-right">Aksi</th>
+                                      {canEdit && <th className="px-4 py-3 text-xs font-bold text-muted-foreground uppercase text-right">Aksi</th>}
                                     </tr>
                                   </thead>
                                   <tbody className="divide-y divide-border/50">
@@ -218,24 +225,26 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, gradeCa
                                               {grade.score ?? '-'}
                                             </span>
                                           </td>
-                                          <td className="px-4 py-3 text-right">
-                                            <div className="flex items-center justify-end gap-1 opacity-0 group-hover/row:opacity-100 transition-opacity">
-                                              <button
-                                                onClick={(e) => { e.stopPropagation(); setEditingGrade(grade); }}
-                                                className="p-1.5 hover:bg-indigo-500/10 text-indigo-600 rounded-lg transition-all"
-                                                title="Update"
-                                              >
-                                                <Edit2 className="w-4 h-4" />
-                                              </button>
-                                              <button
-                                                onClick={(e) => { e.stopPropagation(); setDeletingGrade(grade); }}
-                                                className="p-1.5 hover:bg-red-500/10 text-red-600 rounded-lg transition-all"
-                                                title="Delete"
-                                              >
-                                                <Trash2 className="w-4 h-4" />
-                                              </button>
-                                            </div>
-                                          </td>
+                                          {canEdit && (
+                                            <td className="px-4 py-3 text-right">
+                                              <div className="flex items-center justify-end gap-1 opacity-0 group-hover/row:opacity-100 transition-opacity">
+                                                <button
+                                                  onClick={(e) => { e.stopPropagation(); setEditingGrade(grade); }}
+                                                  className="p-1.5 hover:bg-indigo-500/10 text-indigo-600 rounded-lg transition-all"
+                                                  title="Update"
+                                                >
+                                                  <Edit2 className="w-4 h-4" />
+                                                </button>
+                                                <button
+                                                  onClick={(e) => { e.stopPropagation(); setDeletingGrade(grade); }}
+                                                  className="p-1.5 hover:bg-red-500/10 text-red-600 rounded-lg transition-all"
+                                                  title="Delete"
+                                                >
+                                                  <Trash2 className="w-4 h-4" />
+                                                </button>
+                                              </div>
+                                            </td>
+                                          )}
                                         </tr>
                                       );
                                     })}

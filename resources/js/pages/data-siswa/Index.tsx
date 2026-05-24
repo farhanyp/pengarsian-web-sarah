@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Search, Filter, Network, UserPlus, Edit2, Trash2, Download } from 'lucide-react';
 import CreateModal from './CreateModal';
 import EditModal from './EditModal';
@@ -18,6 +18,9 @@ interface Props {
 }
 
 export default function DataSiswaPage({ students, availableClasses, availableAcademicYears, filters }: Props) {
+  const { auth } = usePage<any>().props;
+  const canEdit = auth?.user?.role === 'SUPERADMIN' || auth?.user?.role === 'ADMIN';
+
   const [search, setSearch] = useState(filters.search || '');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
@@ -90,13 +93,15 @@ export default function DataSiswaPage({ students, availableClasses, availableAca
               </div>
 
               {/* Tambah Button */}
-              <button
-                onClick={() => setIsCreateModalOpen(true)}
-                className="flex items-center justify-center gap-2 px-6 py-2.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-lg shadow-indigo-600/20 w-full sm:w-auto shrink-0"
-              >
-                <UserPlus className="w-5 h-5" />
-                <span className="text-sm">Tambah Siswa</span>
-              </button>
+              {canEdit && (
+                <button
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className="flex items-center justify-center gap-2 px-6 py-2.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-lg shadow-indigo-600/20 w-full sm:w-auto shrink-0"
+                >
+                  <UserPlus className="w-5 h-5" />
+                  <span className="text-sm">Tambah Siswa</span>
+                </button>
+              )}
             </div>
           </div>
 
@@ -109,7 +114,7 @@ export default function DataSiswaPage({ students, availableClasses, availableAca
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">NISN / NIS</th>
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">Nama Siswa</th>
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">Kelas & Tahun</th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest text-right">Actions</th>
+                  {canEdit && <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest text-right">Actions</th>}
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/50">
@@ -138,29 +143,32 @@ export default function DataSiswaPage({ students, availableClasses, availableAca
                         <span className="px-2.5 py-1 bg-muted text-muted-foreground rounded-full text-xs font-bold">-</span>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
-                          onClick={() => setEditingStudent(student)}
-                          className="p-2 hover:bg-indigo-500/10 text-indigo-600 rounded-lg transition-all"
-                          title="Update"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => setDeletingStudent(student)}
-                          className="p-2 hover:bg-red-500/10 text-red-600 rounded-lg transition-all"
-                          title="Delete"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
                     </td>
+                    {canEdit && (
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => setEditingStudent(student)}
+                            className="p-2 hover:bg-indigo-500/10 text-indigo-600 rounded-lg transition-all"
+                            title="Update"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => setDeletingStudent(student)}
+                            className="p-2 hover:bg-red-500/10 text-red-600 rounded-lg transition-all"
+                            title="Delete"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))}
                 {students.data.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-muted-foreground text-sm">
+                    <td colSpan={canEdit ? 5 : 4} className="px-6 py-8 text-center text-muted-foreground text-sm">
                       Tidak ada data siswa ditemukan.
                     </td>
                   </tr>
