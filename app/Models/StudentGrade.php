@@ -2,23 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StudentGrade extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory;
 
     protected $fillable = [
         'student_id',
         'subject_id',
         'grade_category_id',
         'title',
-        'assignment_score',
-        'exam_score',
-        'final_score',
+        'score',
         'semester',
         'academic_year',
         'created_by'

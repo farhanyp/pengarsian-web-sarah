@@ -14,13 +14,19 @@ interface Subject {
   name: string;
 }
 
+interface GradeCategory {
+  id: string;
+  name: string;
+  default_weight: number;
+}
+
 interface Grade {
   id: string;
   student_id: string;
   subject_id: string;
-  assignment_score: number | null;
-  exam_score: number | null;
-  final_score: number | null;
+  grade_category_id: string;
+  title: string;
+  score: number | null;
   semester: string;
   academic_year: string;
 }
@@ -31,14 +37,16 @@ interface Props {
   grade: Grade | null;
   students: Student[];
   subjects: Subject[];
+  gradeCategories: GradeCategory[];
 }
 
-export default function EditModal({ isOpen, onClose, grade, students, subjects }: Props) {
+export default function EditModal({ isOpen, onClose, grade, students, subjects, gradeCategories }: Props) {
   const { data, setData, put, processing, errors, reset } = useForm({
     student_id: '',
     subject_id: '',
-    assignment_score: '',
-    exam_score: '',
+    grade_category_id: '',
+    title: '',
+    score: '',
     semester: 'Ganjil',
     academic_year: '2025/2026',
   });
@@ -48,8 +56,9 @@ export default function EditModal({ isOpen, onClose, grade, students, subjects }
       setData({
         student_id: grade.student_id,
         subject_id: grade.subject_id,
-        assignment_score: grade.assignment_score?.toString() || '',
-        exam_score: grade.exam_score?.toString() || '',
+        grade_category_id: grade.grade_category_id,
+        title: grade.title,
+        score: grade.score?.toString() || '',
         semester: grade.semester,
         academic_year: grade.academic_year,
       });
@@ -140,42 +149,65 @@ export default function EditModal({ isOpen, onClose, grade, students, subjects }
               {errors.subject_id && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.subject_id}</p>}
             </div>
 
-            {/* Scores */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* Category Select */}
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">Kategori Penilaian</label>
+              <select
+                value={data.grade_category_id}
+                onChange={e => setData('grade_category_id', e.target.value)}
+                className={`w-full px-4 py-2.5 bg-background hover:bg-muted/50 border rounded-xl text-sm text-foreground outline-none transition-all ${
+                  errors.grade_category_id 
+                    ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
+                    : 'border-border/50 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50'
+                }`}
+                disabled={processing}
+                required
+              >
+                <option value="">-- Pilih Kategori --</option>
+                {gradeCategories.map(category => (
+                  <option key={category.id} value={category.id}>{category.name}</option>
+                ))}
+              </select>
+              {errors.grade_category_id && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.grade_category_id}</p>}
+            </div>
+
+            {/* Title & Score */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-foreground mb-1.5">Nilai Tugas</label>
+                <label className="block text-sm font-semibold text-foreground mb-1.5">Judul Penilaian</label>
                 <input
-                  type="number"
-                  min="0" max="100" step="0.01"
-                  value={data.assignment_score}
-                  onChange={e => setData('assignment_score', e.target.value)}
+                  type="text"
+                  value={data.title}
+                  onChange={e => setData('title', e.target.value)}
                   className={`w-full px-4 py-2.5 bg-background hover:bg-muted/50 border rounded-xl text-sm text-foreground outline-none transition-all ${
-                    errors.assignment_score 
+                    errors.title 
                       ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
                       : 'border-border/50 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50'
                   }`}
-                  placeholder="0 - 100"
+                  placeholder="Contoh: Tugas Eksponen 1"
                   disabled={processing}
+                  required
                 />
-                {errors.assignment_score && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.assignment_score}</p>}
+                {errors.title && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.title}</p>}
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-foreground mb-1.5">Nilai Ujian</label>
+                <label className="block text-sm font-semibold text-foreground mb-1.5">Nilai Mentah</label>
                 <input
                   type="number"
                   min="0" max="100" step="0.01"
-                  value={data.exam_score}
-                  onChange={e => setData('exam_score', e.target.value)}
+                  value={data.score}
+                  onChange={e => setData('score', e.target.value)}
                   className={`w-full px-4 py-2.5 bg-background hover:bg-muted/50 border rounded-xl text-sm text-foreground outline-none transition-all ${
-                    errors.exam_score 
+                    errors.score 
                       ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
                       : 'border-border/50 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50'
                   }`}
                   placeholder="0 - 100"
                   disabled={processing}
+                  required
                 />
-                {errors.exam_score && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.exam_score}</p>}
+                {errors.score && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.score}</p>}
               </div>
             </div>
 

@@ -3,50 +3,42 @@ import { FormEvent } from 'react';
 import { AlertTriangle, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface Student {
+interface Subject {
+  id: string | number;
   name: string;
-  nis: string;
-}
-
-interface Grade {
-  id: string;
-  title: string;
-  student: Student;
 }
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  grade: Grade | null;
+  subject: Subject | null;
 }
 
-export default function DeleteModal({ isOpen, onClose, grade }: Props) {
+export default function DeleteModal({ isOpen, onClose, subject }: Props) {
   const { delete: destroy, processing } = useForm();
 
-  if (!isOpen || !grade) return null;
+  if (!isOpen || !subject) return null;
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    destroy(`/data-nilai-siswa/${grade.id}`, {
+    destroy(`/mata-pelajaran/${subject.id}`, {
       onSuccess: () => {
-        toast.success("Data nilai berhasil dihapus!");
+        toast.success("Data mata pelajaran berhasil dihapus!");
         onClose();
       },
       onError: () => {
-        toast.error("Gagal menghapus data.");
+        toast.error("Gagal menghapus data mata pelajaran.");
       }
     });
   };
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center">
-      {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
-      {/* Modal Content */}
       <div className="relative bg-background w-full max-w-md rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.30)] overflow-hidden flex flex-col border border-border/50 animate-in fade-in zoom-in duration-200 m-4">
         <div className="p-6 text-center space-y-4">
           <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-2 text-red-600 dark:text-red-400">
@@ -54,11 +46,11 @@ export default function DeleteModal({ isOpen, onClose, grade }: Props) {
           </div>
           
           <h3 className="text-xl font-bold tracking-tight text-foreground">
-            Hapus Data Nilai?
+            Hapus Data Mata Pelajaran?
           </h3>
           
           <p className="text-muted-foreground text-sm">
-            Anda yakin ingin menghapus nilai <span className="font-bold text-foreground">"{grade.title}"</span> untuk siswa <span className="font-bold text-foreground">{grade.student?.name}</span>? 
+            Anda yakin ingin menghapus mata pelajaran <span className="font-bold text-foreground">{subject.name}</span>? 
             Tindakan ini tidak dapat dibatalkan.
           </p>
         </div>

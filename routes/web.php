@@ -29,9 +29,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/tahun-akademik/{tahun_akademik}', [\App\Http\Controllers\AcademicYearController::class, 'destroy'])->name('tahun-akademik.destroy');
 
         Route::get('/data-nilai-siswa', [\App\Http\Controllers\StudentGradeController::class, 'index'])->name('data-nilai-siswa.index');
+        Route::get('/data-nilai-siswa/template', [\App\Http\Controllers\StudentGradeController::class, 'downloadTemplate'])->name('data-nilai-siswa.template');
         Route::post('/data-nilai-siswa', [\App\Http\Controllers\StudentGradeController::class, 'store'])->name('data-nilai-siswa.store');
+        Route::post('/data-nilai-siswa/import', [\App\Http\Controllers\StudentGradeController::class, 'import'])->name('data-nilai-siswa.import');
         Route::put('/data-nilai-siswa/{studentGrade}', [\App\Http\Controllers\StudentGradeController::class, 'update'])->name('data-nilai-siswa.update');
         Route::delete('/data-nilai-siswa/{studentGrade}', [\App\Http\Controllers\StudentGradeController::class, 'destroy'])->name('data-nilai-siswa.destroy');
+
+        Route::get('/mata-pelajaran', [\App\Http\Controllers\SubjectController::class, 'index'])->name('mata-pelajaran.index');
+        Route::post('/mata-pelajaran', [\App\Http\Controllers\SubjectController::class, 'store'])->name('mata-pelajaran.store');
+        Route::put('/mata-pelajaran/{subject}', [\App\Http\Controllers\SubjectController::class, 'update'])->name('mata-pelajaran.update');
+        Route::delete('/mata-pelajaran/{subject}', [\App\Http\Controllers\SubjectController::class, 'destroy'])->name('mata-pelajaran.destroy');
     });
 
 });

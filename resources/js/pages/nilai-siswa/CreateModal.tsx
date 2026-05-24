@@ -15,19 +15,27 @@ interface Subject {
   name: string;
 }
 
+interface GradeCategory {
+  id: string;
+  name: string;
+  default_weight: number;
+}
+
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   students: Student[];
   subjects: Subject[];
+  gradeCategories: GradeCategory[];
 }
 
-export default function CreateModal({ isOpen, onClose, students, subjects }: Props) {
+export default function CreateModal({ isOpen, onClose, students, subjects, gradeCategories }: Props) {
   const { data, setData, post, processing, errors, reset } = useForm({
     student_id: '',
     subject_id: '',
-    assignment_score: '',
-    exam_score: '',
+    grade_category_id: '',
+    title: '',
+    score: '',
     semester: 'Ganjil',
     academic_year: '2025/2026',
   });
@@ -56,6 +64,11 @@ export default function CreateModal({ isOpen, onClose, students, subjects }: Pro
   const subjectOptions: Option[] = subjects.map(s => ({
     id: s.id,
     name: s.name
+  }));
+
+  const categoryOptions: Option[] = gradeCategories.map(c => ({
+    id: c.id,
+    name: c.name
   }));
 
   return (
@@ -108,42 +121,56 @@ export default function CreateModal({ isOpen, onClose, students, subjects }: Pro
               {errors.subject_id && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.subject_id}</p>}
             </div>
 
-            {/* Scores */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* Category Select */}
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">Kategori Penilaian</label>
+              <SearchableSelect
+                options={categoryOptions}
+                value={data.grade_category_id}
+                onChange={(val) => setData('grade_category_id', val as string)}
+                placeholder="Pilih kategori (Tugas, UTS, dll)..."
+                error={!!errors.grade_category_id}
+              />
+              {errors.grade_category_id && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.grade_category_id}</p>}
+            </div>
+
+            {/* Title & Score */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-foreground mb-1.5">Nilai Tugas</label>
+                <label className="block text-sm font-semibold text-foreground mb-1.5">Judul Penilaian</label>
                 <input
-                  type="number"
-                  min="0" max="100" step="0.01"
-                  value={data.assignment_score}
-                  onChange={e => setData('assignment_score', e.target.value)}
+                  type="text"
+                  value={data.title}
+                  onChange={e => setData('title', e.target.value)}
                   className={`w-full px-4 py-2.5 bg-background hover:bg-muted/50 border rounded-xl text-sm text-foreground outline-none transition-all ${
-                    errors.assignment_score 
+                    errors.title 
                       ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
                       : 'border-border/50 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50'
                   }`}
-                  placeholder="0 - 100"
+                  placeholder="Contoh: Tugas Eksponen 1"
                   disabled={processing}
+                  required
                 />
-                {errors.assignment_score && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.assignment_score}</p>}
+                {errors.title && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.title}</p>}
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-foreground mb-1.5">Nilai Ujian</label>
+                <label className="block text-sm font-semibold text-foreground mb-1.5">Nilai Mentah</label>
                 <input
                   type="number"
                   min="0" max="100" step="0.01"
-                  value={data.exam_score}
-                  onChange={e => setData('exam_score', e.target.value)}
+                  value={data.score}
+                  onChange={e => setData('score', e.target.value)}
                   className={`w-full px-4 py-2.5 bg-background hover:bg-muted/50 border rounded-xl text-sm text-foreground outline-none transition-all ${
-                    errors.exam_score 
+                    errors.score 
                       ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
                       : 'border-border/50 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50'
                   }`}
                   placeholder="0 - 100"
                   disabled={processing}
+                  required
                 />
-                {errors.exam_score && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.exam_score}</p>}
+                {errors.score && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.score}</p>}
               </div>
             </div>
 

@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import { Search, Filter, Plus, Edit2, Trash2, Download, TrendingUp, Trophy, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Search, Filter, Plus, Edit2, Trash2, Download, TrendingUp, Trophy, AlertCircle, CheckCircle2, FileSpreadsheet } from 'lucide-react';
 import CreateModal from './CreateModal';
 import EditModal from './EditModal';
 import DeleteModal from './DeleteModal';
+import ImportModal from './ImportModal';
 
 interface Student {
   id: string;
@@ -17,17 +18,24 @@ interface Subject {
   name: string;
 }
 
+interface GradeCategory {
+  id: string;
+  name: string;
+  default_weight: number;
+}
+
 interface Grade {
   id: string;
   student_id: string;
   subject_id: string;
-  assignment_score: number | null;
-  exam_score: number | null;
-  final_score: number | null;
+  grade_category_id: string;
+  title: string;
+  score: number | null;
   semester: string;
   academic_year: string;
   student: Student;
   subject: Subject;
+  category: GradeCategory;
 }
 
 interface PaginationLink {
@@ -48,14 +56,17 @@ interface Props {
   grades: GradesPaginated;
   students: Student[];
   subjects: Subject[];
+  gradeCategories: GradeCategory[];
+  availableAcademicYears: { id: string; name: string }[];
   filters: {
     search?: string;
   };
 }
 
-export default function DataNilaiSiswaPage({ grades, students, subjects, filters }: Props) {
+export default function DataNilaiSiswaPage({ grades, students, subjects, gradeCategories, availableAcademicYears, filters }: Props) {
   const [search, setSearch] = useState(filters.search || '');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [editingGrade, setEditingGrade] = useState<Grade | null>(null);
   const [deletingGrade, setDeletingGrade] = useState<Grade | null>(null);
 
@@ -92,50 +103,6 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, filters
 
       {/* Scrollable body */}
       <div className="p-6 md:p-10 space-y-8">
-        
-        {/* Bento Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-background/60 backdrop-blur-xl p-5 rounded-2xl border border-border/50 flex flex-col gap-2 hover:border-indigo-500/50 transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.20)] relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <TrendingUp className="w-16 h-16 text-indigo-500" />
-            </div>
-            <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Rata-rata Kelas</p>
-            <div className="flex items-baseline gap-2 relative z-10">
-              <span className="text-3xl text-indigo-600 dark:text-indigo-400 font-extrabold">87.4</span>
-              <span className="text-emerald-500 text-sm font-bold">+2.1%</span>
-            </div>
-            <div className="w-full bg-muted h-1.5 rounded-full overflow-hidden mt-1 relative z-10">
-              <div className="bg-indigo-600 h-full w-[87%] rounded-full"></div>
-            </div>
-          </div>
-          
-          <div className="bg-background/60 backdrop-blur-xl p-5 rounded-2xl border border-border/50 flex flex-col gap-2 hover:border-indigo-500/50 transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.20)] relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <Trophy className="w-16 h-16 text-foreground" />
-            </div>
-            <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Nilai Tertinggi</p>
-            <span className="text-3xl text-foreground font-extrabold relative z-10">99.0</span>
-            <p className="text-sm text-muted-foreground font-semibold relative z-10">Matematika - XII-IPA 1</p>
-          </div>
-          
-          <div className="bg-background/60 backdrop-blur-xl p-5 rounded-2xl border border-border/50 flex flex-col gap-2 hover:border-red-500/50 transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.20)] relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <AlertCircle className="w-16 h-16 text-red-500" />
-            </div>
-            <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Siswa Remedial</p>
-            <span className="text-3xl text-red-500 font-extrabold relative z-10">4</span>
-            <p className="text-sm text-muted-foreground font-semibold relative z-10">Turun dari 7 bulan lalu</p>
-          </div>
-          
-          <div className="bg-background/60 backdrop-blur-xl p-5 rounded-2xl border border-border/50 flex flex-col gap-2 hover:border-emerald-500/50 transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.20)] relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <CheckCircle2 className="w-16 h-16 text-emerald-500" />
-            </div>
-            <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Partisipasi Ujian</p>
-            <span className="text-3xl text-emerald-500 font-extrabold relative z-10">100%</span>
-            <p className="text-sm text-muted-foreground font-semibold relative z-10">Semua 1,240 siswa selesai</p>
-          </div>
-        </div>
 
         {/* Data Table Section */}
         <section
@@ -173,6 +140,15 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, filters
                 </button>
               </div>
 
+              {/* Import Button */}
+              <button
+                onClick={() => setIsImportModalOpen(true)}
+                className="flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl active:scale-[0.98] transition-all shadow-lg shadow-emerald-600/20 w-full sm:w-auto shrink-0"
+              >
+                <FileSpreadsheet className="w-5 h-5" />
+                <span className="text-sm">Import Excel</span>
+              </button>
+
               {/* Tambah Button */}
               <button
                 onClick={() => setIsCreateModalOpen(true)}
@@ -192,16 +168,16 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, filters
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">No</th>
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">Nama Siswa</th>
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">Mata Pelajaran</th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest text-center">Nilai Tugas</th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest text-center">Nilai Ujian</th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest text-center">Nilai Akhir</th>
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">Kategori</th>
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">Judul Penilaian</th>
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest text-center">Nilai</th>
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/50">
                 {grades.data.map((grade, index) => {
-                  const finalScore = grade.final_score ?? 0;
-                  const isRemedial = finalScore < 70;
+                  const score = grade.score ?? 0;
+                  const isRemedial = score < 70;
                   const initials = grade.student?.name?.substring(0, 2).toUpperCase() || 'NA';
                   return (
                     <tr key={grade.id} className={`transition-colors group ${isRemedial ? 'hover:bg-red-500/5 bg-red-500/5' : 'hover:bg-muted/30'}`}>
@@ -220,15 +196,15 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, filters
                       <td className="px-6 py-4 text-sm font-semibold text-foreground">
                         {grade.subject?.name}
                       </td>
-                      <td className="px-6 py-4 text-center">
-                        <span className="text-sm font-bold text-foreground">{grade.assignment_score ?? '-'}</span>
+                      <td className="px-6 py-4 text-sm font-semibold text-muted-foreground">
+                        {grade.category?.name}
                       </td>
-                      <td className="px-6 py-4 text-center">
-                        <span className="text-sm font-bold text-foreground">{grade.exam_score ?? '-'}</span>
+                      <td className="px-6 py-4 text-sm font-semibold text-foreground">
+                        {grade.title}
                       </td>
                       <td className="px-6 py-4 text-center">
                         <span className={`px-2.5 py-1 rounded-md font-bold text-sm border ${isRemedial ? 'bg-red-500/10 text-red-600 border-red-500/20' : 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'}`}>
-                          {grade.final_score ?? '-'}
+                          {grade.score ?? '-'}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right">
@@ -276,8 +252,8 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, filters
                       key={i}
                       href={link.url}
                       className={`px-3 py-1.5 text-sm rounded-lg transition-all ${link.active
-                          ? 'bg-indigo-600 text-white font-bold shadow-sm'
-                          : 'text-muted-foreground hover:text-indigo-600 hover:bg-indigo-500/10'
+                        ? 'bg-indigo-600 text-white font-bold shadow-sm'
+                        : 'text-muted-foreground hover:text-indigo-600 hover:bg-indigo-500/10'
                         }`}
                       dangerouslySetInnerHTML={{ __html: link.label }}
                     />
@@ -301,20 +277,30 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, filters
         onClose={() => setIsCreateModalOpen(false)}
         students={students}
         subjects={subjects}
+        gradeCategories={gradeCategories}
       />
-      
+
       <EditModal
         isOpen={!!editingGrade}
         onClose={() => setEditingGrade(null)}
         grade={editingGrade}
         students={students}
         subjects={subjects}
+        gradeCategories={gradeCategories}
       />
-      
+
       <DeleteModal
         isOpen={!!deletingGrade}
         onClose={() => setDeletingGrade(null)}
         grade={deletingGrade}
+      />
+
+      <ImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        subjects={subjects}
+        students={students}
+        availableAcademicYears={availableAcademicYears}
       />
     </>
   );
