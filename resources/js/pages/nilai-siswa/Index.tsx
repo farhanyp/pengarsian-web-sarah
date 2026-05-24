@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo, Fragment } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import { Search, Filter, Plus, Edit2, Trash2, Download, TrendingUp, Trophy, AlertCircle, CheckCircle2, FileSpreadsheet } from 'lucide-react';
+import { Search, Filter, Plus, Edit2, Trash2, Download, TrendingUp, Trophy, AlertCircle, CheckCircle2, FileSpreadsheet, ChevronDown, ChevronUp } from 'lucide-react';
 import CreateModal from './CreateModal';
 import EditModal from './EditModal';
 import DeleteModal from './DeleteModal';
@@ -69,6 +69,24 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, gradeCa
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [editingGrade, setEditingGrade] = useState<Grade | null>(null);
   const [deletingGrade, setDeletingGrade] = useState<Grade | null>(null);
+  const [expandedStudentId, setExpandedStudentId] = useState<string | null>(null);
+
+  const groupedGrades = useMemo(() => {
+    const groups: Record<string, { student: Student; grades: Grade[] }> = {};
+    grades.data.forEach(grade => {
+      const studentId = grade.student?.id;
+      if (!studentId) return;
+      if (!groups[studentId]) {
+        groups[studentId] = { student: grade.student, grades: [] };
+      }
+      groups[studentId].grades.push(grade);
+    });
+    return Object.values(groups);
+  }, [grades.data]);
+
+  const toggleExpand = (studentId: string) => {
+    setExpandedStudentId(prev => prev === studentId ? null : studentId);
+  };
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -165,72 +183,119 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, gradeCa
             <table className="w-full text-left border-collapse min-w-[800px]">
               <thead className="bg-muted/30 border-b border-sidebar-border/70 dark:border-sidebar-border">
                 <tr>
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">No</th>
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest w-16">No</th>
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">Nama Siswa</th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">Mata Pelajaran</th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">Kategori</th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">Judul Penilaian</th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest text-center">Nilai</th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest text-right">Actions</th>
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest text-center">Jumlah Data Nilai</th>
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest text-right">Detail</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/50">
-                {grades.data.map((grade, index) => {
-                  const score = grade.score ?? 0;
-                  const isRemedial = score < 70;
-                  const initials = grade.student?.name?.substring(0, 2).toUpperCase() || 'NA';
+                {groupedGrades.map((group, index) => {
+                  const student = group.student;
+                  const studentGrades = group.grades;
+                  const isExpanded = expandedStudentId === student.id;
+                  const initials = student?.name?.substring(0, 2).toUpperCase() || 'NA';
+                  
                   return (
-                    <tr key={grade.id} className={`transition-colors group ${isRemedial ? 'hover:bg-red-500/5 bg-red-500/5' : 'hover:bg-muted/30'}`}>
-                      <td className="px-6 py-4 text-sm text-muted-foreground">{grades.from + index}</td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${isRemedial ? 'bg-red-500/10 text-red-600 dark:text-red-400' : 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400'}`}>
-                            {initials}
+                    <Fragment key={student.id}>
+                      <tr 
+                        className={`transition-colors group hover:bg-muted/30 cursor-pointer ${isExpanded ? 'bg-muted/30' : ''}`}
+                        onClick={() => toggleExpand(student.id)}
+                      >
+                        <td className="px-6 py-4 text-sm text-muted-foreground">{index + 1}</td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                              {initials}
+                            </div>
+                            <div>
+                              <span className="text-sm font-semibold text-foreground">{student?.name}</span>
+                              <p className="text-xs font-mono text-muted-foreground mt-0.5">NIS: {student?.nis}</p>
+                            </div>
                           </div>
-                          <div>
-                            <span className="text-sm font-semibold text-foreground">{grade.student?.name}</span>
-                            <p className="text-xs font-mono text-muted-foreground mt-0.5">NIS: {grade.student?.nis}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm font-semibold text-foreground">
-                        {grade.subject?.name}
-                      </td>
-                      <td className="px-6 py-4 text-sm font-semibold text-muted-foreground">
-                        {grade.category?.name}
-                      </td>
-                      <td className="px-6 py-4 text-sm font-semibold text-foreground">
-                        {grade.title}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <span className={`px-2.5 py-1 rounded-md font-bold text-sm border ${isRemedial ? 'bg-red-500/10 text-red-600 border-red-500/20' : 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'}`}>
-                          {grade.score ?? '-'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button
-                            onClick={() => setEditingGrade(grade)}
-                            className="p-2 hover:bg-indigo-500/10 text-indigo-600 rounded-lg transition-all"
-                            title="Update"
-                          >
-                            <Edit2 className="w-4 h-4" />
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <span className="px-3 py-1 bg-indigo-500/10 text-indigo-600 rounded-full font-bold text-xs">
+                            {studentGrades.length} Nilai
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <button className="p-2 text-muted-foreground hover:text-indigo-600 rounded-lg transition-all">
+                            {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                           </button>
-                          <button
-                            onClick={() => setDeletingGrade(grade)}
-                            className="p-2 hover:bg-red-500/10 text-red-600 rounded-lg transition-all"
-                            title="Delete"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                        </td>
+                      </tr>
+                      
+                      {isExpanded && (
+                        <tr>
+                          <td colSpan={4} className="p-0 border-b-0">
+                            <div className="bg-muted/10 border-t border-border/50 px-6 py-4 shadow-inner">
+                              <div className="rounded-xl border border-border/50 overflow-hidden bg-background">
+                                <table className="w-full text-left border-collapse">
+                                  <thead className="bg-muted/30 border-b border-border/50">
+                                    <tr>
+                                      <th className="px-4 py-3 text-xs font-bold text-muted-foreground uppercase">Mata Pelajaran</th>
+                                      <th className="px-4 py-3 text-xs font-bold text-muted-foreground uppercase">Kategori</th>
+                                      <th className="px-4 py-3 text-xs font-bold text-muted-foreground uppercase">Judul Penilaian</th>
+                                      <th className="px-4 py-3 text-xs font-bold text-muted-foreground uppercase text-center">Nilai</th>
+                                      <th className="px-4 py-3 text-xs font-bold text-muted-foreground uppercase text-right">Aksi</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody className="divide-y divide-border/50">
+                                    {studentGrades.map(grade => {
+                                      const score = grade.score ?? 0;
+                                      const isRemedial = score < 70;
+                                      
+                                      return (
+                                        <tr key={grade.id} className={`transition-colors group/row ${isRemedial ? 'hover:bg-red-500/5 bg-red-500/5' : 'hover:bg-muted/20'}`}>
+                                          <td className="px-4 py-3 text-sm font-semibold text-foreground">
+                                            {grade.subject?.name}
+                                          </td>
+                                          <td className="px-4 py-3 text-sm font-semibold text-muted-foreground">
+                                            {grade.category?.name}
+                                          </td>
+                                          <td className="px-4 py-3 text-sm font-semibold text-foreground">
+                                            {grade.title}
+                                          </td>
+                                          <td className="px-4 py-3 text-center">
+                                            <span className={`px-2.5 py-1 rounded-md font-bold text-sm border ${isRemedial ? 'bg-red-500/10 text-red-600 border-red-500/20' : 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'}`}>
+                                              {grade.score ?? '-'}
+                                            </span>
+                                          </td>
+                                          <td className="px-4 py-3 text-right">
+                                            <div className="flex items-center justify-end gap-1 opacity-0 group-hover/row:opacity-100 transition-opacity">
+                                              <button
+                                                onClick={(e) => { e.stopPropagation(); setEditingGrade(grade); }}
+                                                className="p-1.5 hover:bg-indigo-500/10 text-indigo-600 rounded-lg transition-all"
+                                                title="Update"
+                                              >
+                                                <Edit2 className="w-4 h-4" />
+                                              </button>
+                                              <button
+                                                onClick={(e) => { e.stopPropagation(); setDeletingGrade(grade); }}
+                                                className="p-1.5 hover:bg-red-500/10 text-red-600 rounded-lg transition-all"
+                                                title="Delete"
+                                              >
+                                                <Trash2 className="w-4 h-4" />
+                                              </button>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                      );
+                                    })}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
                   );
                 })}
-                {grades.data.length === 0 && (
+                {groupedGrades.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="px-6 py-8 text-center text-muted-foreground text-sm font-medium">
+                    <td colSpan={4} className="px-6 py-8 text-center text-muted-foreground text-sm font-medium">
                       Tidak ada data nilai ditemukan.
                     </td>
                   </tr>
