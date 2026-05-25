@@ -26,6 +26,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Hanya ADMIN dan SUPERADMIN yang bisa menambah, mengubah, dan menghapus (Write Access)
     Route::middleware(['role:ADMIN|SUPERADMIN'])->group(function () {
+        Route::get('/data-siswa/template', [StudentController::class, 'downloadTemplate'])->name('data-siswa.template');
+        Route::post('/data-siswa/import', [StudentController::class, 'importBatch'])->name('data-siswa.import');
         Route::post('/data-siswa', [StudentController::class, 'store'])->name('data-siswa.store');
         Route::put('/data-siswa/{student}', [StudentController::class, 'update'])->name('data-siswa.update');
         Route::delete('/data-siswa/{student}', [StudentController::class, 'destroy'])->name('data-siswa.destroy');

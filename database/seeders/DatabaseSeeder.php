@@ -136,16 +136,16 @@ class DatabaseSeeder extends Seeder
 
         // 7. Create Students and attach them to class "10 MIPA 1" for active academic year
         $studentsData = [
-            ['nis' => '10001', 'nisn' => '0000100001', 'name' => 'Ahmad Fauzi'],
-            ['nis' => '10002', 'nisn' => '0000100002', 'name' => 'Budi Santoso'],
-            ['nis' => '10003', 'nisn' => '0000100003', 'name' => 'Citra Lestari'],
-            ['nis' => '10004', 'nisn' => '0000100004', 'name' => 'Dewi Sartika'],
-            ['nis' => '10005', 'nisn' => '0000100005', 'name' => 'Eko Prasetyo'],
-            ['nis' => '10006', 'nisn' => '0000100006', 'name' => 'Farhan Yudha'],
-            ['nis' => '10007', 'nisn' => '0000100007', 'name' => 'Gita Ayu'],
-            ['nis' => '10008', 'nisn' => '0000100008', 'name' => 'Hendra Wijaya'],
-            ['nis' => '10009', 'nisn' => '0000100009', 'name' => 'Indah Permata'],
-            ['nis' => '10010', 'nisn' => '0000100010', 'name' => 'Joko Susilo'],
+            ['nis' => '10001', 'nisn' => '0000100001', 'name' => 'Ahmad Fauzi', 'jenis_kelamin' => 'PRIA'],
+            ['nis' => '10002', 'nisn' => '0000100002', 'name' => 'Budi Santoso', 'jenis_kelamin' => 'PRIA'],
+            ['nis' => '10003', 'nisn' => '0000100003', 'name' => 'Citra Lestari', 'jenis_kelamin' => 'WANITA'],
+            ['nis' => '10004', 'nisn' => '0000100004', 'name' => 'Dewi Sartika', 'jenis_kelamin' => 'WANITA'],
+            ['nis' => '10005', 'nisn' => '0000100005', 'name' => 'Eko Prasetyo', 'jenis_kelamin' => 'PRIA'],
+            ['nis' => '10006', 'nisn' => '0000100006', 'name' => 'Farhan Yudha', 'jenis_kelamin' => 'PRIA'],
+            ['nis' => '10007', 'nisn' => '0000100007', 'name' => 'Gita Ayu', 'jenis_kelamin' => 'WANITA'],
+            ['nis' => '10008', 'nisn' => '0000100008', 'name' => 'Hendra Wijaya', 'jenis_kelamin' => 'PRIA'],
+            ['nis' => '10009', 'nisn' => '0000100009', 'name' => 'Indah Permata', 'jenis_kelamin' => 'WANITA'],
+            ['nis' => '10010', 'nisn' => '0000100010', 'name' => 'Joko Susilo', 'jenis_kelamin' => 'PRIA'],
         ];
 
         $activeYear = \App\Models\AcademicYear::where('is_active', true)->first();
@@ -159,6 +159,7 @@ class DatabaseSeeder extends Seeder
                         'id' => \Illuminate\Support\Str::uuid()->toString(),
                         'nisn' => $studentData['nisn'],
                         'name' => $studentData['name'],
+                        'jenis_kelamin' => $studentData['jenis_kelamin'],
                     ]
                 );
 

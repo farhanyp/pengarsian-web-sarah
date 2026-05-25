@@ -79,7 +79,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \App\Http\Controllers\StudentGradeController::downloadReport
- * @see app/Http/Controllers/StudentGradeController.php:256
+ * @see app/Http/Controllers/StudentGradeController.php:277
  * @route '/data-nilai-siswa/download-report'
  */
 export const downloadReport = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -94,7 +94,7 @@ downloadReport.definition = {
 
 /**
 * @see \App\Http\Controllers\StudentGradeController::downloadReport
- * @see app/Http/Controllers/StudentGradeController.php:256
+ * @see app/Http/Controllers/StudentGradeController.php:277
  * @route '/data-nilai-siswa/download-report'
  */
 downloadReport.url = (options?: RouteQueryOptions) => {
@@ -103,7 +103,7 @@ downloadReport.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\StudentGradeController::downloadReport
- * @see app/Http/Controllers/StudentGradeController.php:256
+ * @see app/Http/Controllers/StudentGradeController.php:277
  * @route '/data-nilai-siswa/download-report'
  */
 downloadReport.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -112,7 +112,7 @@ downloadReport.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\StudentGradeController::downloadReport
- * @see app/Http/Controllers/StudentGradeController.php:256
+ * @see app/Http/Controllers/StudentGradeController.php:277
  * @route '/data-nilai-siswa/download-report'
  */
 downloadReport.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -122,7 +122,7 @@ downloadReport.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => 
 
     /**
 * @see \App\Http\Controllers\StudentGradeController::downloadReport
- * @see app/Http/Controllers/StudentGradeController.php:256
+ * @see app/Http/Controllers/StudentGradeController.php:277
  * @route '/data-nilai-siswa/download-report'
  */
     const downloadReportForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -132,7 +132,7 @@ downloadReport.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => 
 
             /**
 * @see \App\Http\Controllers\StudentGradeController::downloadReport
- * @see app/Http/Controllers/StudentGradeController.php:256
+ * @see app/Http/Controllers/StudentGradeController.php:277
  * @route '/data-nilai-siswa/download-report'
  */
         downloadReportForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -141,7 +141,7 @@ downloadReport.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => 
         })
             /**
 * @see \App\Http\Controllers\StudentGradeController::downloadReport
- * @see app/Http/Controllers/StudentGradeController.php:256
+ * @see app/Http/Controllers/StudentGradeController.php:277
  * @route '/data-nilai-siswa/download-report'
  */
         downloadReportForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -157,7 +157,7 @@ downloadReport.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => 
     downloadReport.form = downloadReportForm
 /**
 * @see \App\Http\Controllers\StudentGradeController::template
- * @see app/Http/Controllers/StudentGradeController.php:128
+ * @see app/Http/Controllers/StudentGradeController.php:149
  * @route '/data-nilai-siswa/template'
  */
 export const template = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -172,7 +172,7 @@ template.definition = {
 
 /**
 * @see \App\Http\Controllers\StudentGradeController::template
- * @see app/Http/Controllers/StudentGradeController.php:128
+ * @see app/Http/Controllers/StudentGradeController.php:149
  * @route '/data-nilai-siswa/template'
  */
 template.url = (options?: RouteQueryOptions) => {
@@ -181,7 +181,7 @@ template.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\StudentGradeController::template
- * @see app/Http/Controllers/StudentGradeController.php:128
+ * @see app/Http/Controllers/StudentGradeController.php:149
  * @route '/data-nilai-siswa/template'
  */
 template.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -190,7 +190,7 @@ template.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\StudentGradeController::template
- * @see app/Http/Controllers/StudentGradeController.php:128
+ * @see app/Http/Controllers/StudentGradeController.php:149
  * @route '/data-nilai-siswa/template'
  */
 template.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -200,7 +200,7 @@ template.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\StudentGradeController::template
- * @see app/Http/Controllers/StudentGradeController.php:128
+ * @see app/Http/Controllers/StudentGradeController.php:149
  * @route '/data-nilai-siswa/template'
  */
     const templateForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -210,7 +210,7 @@ template.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\StudentGradeController::template
- * @see app/Http/Controllers/StudentGradeController.php:128
+ * @see app/Http/Controllers/StudentGradeController.php:149
  * @route '/data-nilai-siswa/template'
  */
         templateForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -219,7 +219,7 @@ template.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\StudentGradeController::template
- * @see app/Http/Controllers/StudentGradeController.php:128
+ * @see app/Http/Controllers/StudentGradeController.php:149
  * @route '/data-nilai-siswa/template'
  */
         templateForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -235,7 +235,7 @@ template.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     template.form = templateForm
 /**
 * @see \App\Http\Controllers\StudentGradeController::store
- * @see app/Http/Controllers/StudentGradeController.php:55
+ * @see app/Http/Controllers/StudentGradeController.php:76
  * @route '/data-nilai-siswa'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -250,7 +250,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\StudentGradeController::store
- * @see app/Http/Controllers/StudentGradeController.php:55
+ * @see app/Http/Controllers/StudentGradeController.php:76
  * @route '/data-nilai-siswa'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -259,7 +259,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\StudentGradeController::store
- * @see app/Http/Controllers/StudentGradeController.php:55
+ * @see app/Http/Controllers/StudentGradeController.php:76
  * @route '/data-nilai-siswa'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -269,7 +269,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\StudentGradeController::store
- * @see app/Http/Controllers/StudentGradeController.php:55
+ * @see app/Http/Controllers/StudentGradeController.php:76
  * @route '/data-nilai-siswa'
  */
     const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -279,7 +279,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\StudentGradeController::store
- * @see app/Http/Controllers/StudentGradeController.php:55
+ * @see app/Http/Controllers/StudentGradeController.php:76
  * @route '/data-nilai-siswa'
  */
         storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -290,7 +290,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     store.form = storeForm
 /**
 * @see \App\Http\Controllers\StudentGradeController::importMethod
- * @see app/Http/Controllers/StudentGradeController.php:98
+ * @see app/Http/Controllers/StudentGradeController.php:119
  * @route '/data-nilai-siswa/import'
  */
 export const importMethod = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -305,7 +305,7 @@ importMethod.definition = {
 
 /**
 * @see \App\Http\Controllers\StudentGradeController::importMethod
- * @see app/Http/Controllers/StudentGradeController.php:98
+ * @see app/Http/Controllers/StudentGradeController.php:119
  * @route '/data-nilai-siswa/import'
  */
 importMethod.url = (options?: RouteQueryOptions) => {
@@ -314,7 +314,7 @@ importMethod.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\StudentGradeController::importMethod
- * @see app/Http/Controllers/StudentGradeController.php:98
+ * @see app/Http/Controllers/StudentGradeController.php:119
  * @route '/data-nilai-siswa/import'
  */
 importMethod.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -324,7 +324,7 @@ importMethod.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\StudentGradeController::importMethod
- * @see app/Http/Controllers/StudentGradeController.php:98
+ * @see app/Http/Controllers/StudentGradeController.php:119
  * @route '/data-nilai-siswa/import'
  */
     const importMethodForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -334,7 +334,7 @@ importMethod.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\StudentGradeController::importMethod
- * @see app/Http/Controllers/StudentGradeController.php:98
+ * @see app/Http/Controllers/StudentGradeController.php:119
  * @route '/data-nilai-siswa/import'
  */
         importMethodForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -345,7 +345,7 @@ importMethod.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     importMethod.form = importMethodForm
 /**
 * @see \App\Http\Controllers\StudentGradeController::update
- * @see app/Http/Controllers/StudentGradeController.php:74
+ * @see app/Http/Controllers/StudentGradeController.php:95
  * @route '/data-nilai-siswa/{studentGrade}'
  */
 export const update = (args: { studentGrade: number | { id: number } } | [studentGrade: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -360,7 +360,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\StudentGradeController::update
- * @see app/Http/Controllers/StudentGradeController.php:74
+ * @see app/Http/Controllers/StudentGradeController.php:95
  * @route '/data-nilai-siswa/{studentGrade}'
  */
 update.url = (args: { studentGrade: number | { id: number } } | [studentGrade: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -393,7 +393,7 @@ update.url = (args: { studentGrade: number | { id: number } } | [studentGrade: n
 
 /**
 * @see \App\Http\Controllers\StudentGradeController::update
- * @see app/Http/Controllers/StudentGradeController.php:74
+ * @see app/Http/Controllers/StudentGradeController.php:95
  * @route '/data-nilai-siswa/{studentGrade}'
  */
 update.put = (args: { studentGrade: number | { id: number } } | [studentGrade: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -403,7 +403,7 @@ update.put = (args: { studentGrade: number | { id: number } } | [studentGrade: n
 
     /**
 * @see \App\Http\Controllers\StudentGradeController::update
- * @see app/Http/Controllers/StudentGradeController.php:74
+ * @see app/Http/Controllers/StudentGradeController.php:95
  * @route '/data-nilai-siswa/{studentGrade}'
  */
     const updateForm = (args: { studentGrade: number | { id: number } } | [studentGrade: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -418,7 +418,7 @@ update.put = (args: { studentGrade: number | { id: number } } | [studentGrade: n
 
             /**
 * @see \App\Http\Controllers\StudentGradeController::update
- * @see app/Http/Controllers/StudentGradeController.php:74
+ * @see app/Http/Controllers/StudentGradeController.php:95
  * @route '/data-nilai-siswa/{studentGrade}'
  */
         updateForm.put = (args: { studentGrade: number | { id: number } } | [studentGrade: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -434,7 +434,7 @@ update.put = (args: { studentGrade: number | { id: number } } | [studentGrade: n
     update.form = updateForm
 /**
 * @see \App\Http\Controllers\StudentGradeController::destroy
- * @see app/Http/Controllers/StudentGradeController.php:91
+ * @see app/Http/Controllers/StudentGradeController.php:112
  * @route '/data-nilai-siswa/{studentGrade}'
  */
 export const destroy = (args: { studentGrade: number | { id: number } } | [studentGrade: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -449,7 +449,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\StudentGradeController::destroy
- * @see app/Http/Controllers/StudentGradeController.php:91
+ * @see app/Http/Controllers/StudentGradeController.php:112
  * @route '/data-nilai-siswa/{studentGrade}'
  */
 destroy.url = (args: { studentGrade: number | { id: number } } | [studentGrade: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -482,7 +482,7 @@ destroy.url = (args: { studentGrade: number | { id: number } } | [studentGrade: 
 
 /**
 * @see \App\Http\Controllers\StudentGradeController::destroy
- * @see app/Http/Controllers/StudentGradeController.php:91
+ * @see app/Http/Controllers/StudentGradeController.php:112
  * @route '/data-nilai-siswa/{studentGrade}'
  */
 destroy.delete = (args: { studentGrade: number | { id: number } } | [studentGrade: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -492,7 +492,7 @@ destroy.delete = (args: { studentGrade: number | { id: number } } | [studentGrad
 
     /**
 * @see \App\Http\Controllers\StudentGradeController::destroy
- * @see app/Http/Controllers/StudentGradeController.php:91
+ * @see app/Http/Controllers/StudentGradeController.php:112
  * @route '/data-nilai-siswa/{studentGrade}'
  */
     const destroyForm = (args: { studentGrade: number | { id: number } } | [studentGrade: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -507,7 +507,7 @@ destroy.delete = (args: { studentGrade: number | { id: number } } | [studentGrad
 
             /**
 * @see \App\Http\Controllers\StudentGradeController::destroy
- * @see app/Http/Controllers/StudentGradeController.php:91
+ * @see app/Http/Controllers/StudentGradeController.php:112
  * @route '/data-nilai-siswa/{studentGrade}'
  */
         destroyForm.delete = (args: { studentGrade: number | { id: number } } | [studentGrade: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

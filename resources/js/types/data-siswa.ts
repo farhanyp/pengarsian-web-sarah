@@ -11,6 +11,7 @@ export interface Student {
   nis: string;
   nisn: string;
   name: string;
+  jenis_kelamin: string;
   classes?: StudentClass[];
 }
 

@@ -16,6 +16,7 @@ export default function CreateModal({ isOpen, onClose, availableClasses, availab
     nis: '',
     nisn: '',
     name: '',
+    jenis_kelamin: '',
     class_id: '',
     academic_year: '',
   });
@@ -111,6 +112,26 @@ export default function CreateModal({ isOpen, onClose, availableClasses, availab
                 required
               />
               {errors.name && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.name}</p>}
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">Jenis Kelamin</label>
+              <select
+                value={data.jenis_kelamin}
+                onChange={e => setData('jenis_kelamin', e.target.value)}
+                className={`w-full px-4 py-2.5 bg-background hover:bg-muted/50 border rounded-xl text-sm text-foreground outline-none transition-all ${
+                  errors.jenis_kelamin 
+                    ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
+                    : 'border-border/50 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50'
+                }`}
+                disabled={processing}
+                required
+              >
+                <option value="" disabled>Pilih Jenis Kelamin</option>
+                <option value="PRIA">Pria</option>
+                <option value="WANITA">Wanita</option>
+              </select>
+              {errors.jenis_kelamin && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.jenis_kelamin}</p>}
             </div>
 
             <div>

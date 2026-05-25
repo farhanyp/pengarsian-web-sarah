@@ -1,11 +1,18 @@
-import { useState, useMemo, Fragment } from 'react';
+import { useState, useMemo, Fragment, useEffect, useRef } from 'react';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Search, Filter, Plus, Edit2, Trash2, Download, TrendingUp, Trophy, AlertCircle, CheckCircle2, FileSpreadsheet, ChevronDown, ChevronUp } from 'lucide-react';
+import { Search, Filter, Plus, Edit2, Trash2, Download, TrendingUp, Trophy, AlertCircle, CheckCircle2, FileSpreadsheet, ChevronDown, ChevronUp, Inbox } from 'lucide-react';
 import CreateModal from './CreateModal';
 import EditModal from './EditModal';
 import DeleteModal from './DeleteModal';
 import ImportModal from './ImportModal';
 import DownloadNilaiModal from './partials/DownloadNilaiModal';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { Student, Subject, GradeCategory, Grade, GradesPaginated } from '@/types/nilai-siswa';
 
@@ -18,6 +25,9 @@ interface Props {
   availableAcademicYears: { id: string; name: string }[];
   filters: {
     search?: string;
+    filter_semester?: string;
+    filter_ay?: string;
+    filter_class?: string;
   };
 }
 
@@ -26,12 +36,48 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, classes
   const canEdit = ['SUPERADMIN', 'ADMIN', 'GURU'].includes(auth?.user?.role);
 
   const [search, setSearch] = useState(filters.search || '');
+  const [filterSemester, setFilterSemester] = useState(filters.filter_semester || 'all');
+  const [filterAy, setFilterAy] = useState(filters.filter_ay || 'all');
+  const [filterClass, setFilterClass] = useState(filters.filter_class || 'all');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [editingGrade, setEditingGrade] = useState<Grade | null>(null);
   const [deletingGrade, setDeletingGrade] = useState<Grade | null>(null);
   const [expandedStudentId, setExpandedStudentId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const isInitialRender = useRef(true);
+
+  useEffect(() => {
+    const removeStart = router.on('start', () => setIsLoading(true));
+    const removeFinish = router.on('finish', () => setIsLoading(false));
+    return () => {
+      removeStart();
+      removeFinish();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+      return;
+    }
+
+    const delayDebounceFn = setTimeout(() => {
+      router.get(
+        '/data-nilai-siswa',
+        { 
+          search: search || undefined,
+          filter_semester: filterSemester !== 'all' ? filterSemester : undefined,
+          filter_ay: filterAy !== 'all' ? filterAy : undefined,
+          filter_class: filterClass !== 'all' ? filterClass : undefined,
+        },
+        { preserveState: true, replace: true, preserveScroll: true }
+      );
+    }, 400);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [search, filterSemester, filterAy, filterClass]);
 
   const groupedGrades = useMemo(() => {
     const groups: Record<string, { student: Student; grades: Grade[] }> = {};
@@ -48,12 +94,6 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, classes
 
   const toggleExpand = (studentId: string) => {
     setExpandedStudentId(prev => prev === studentId ? null : studentId);
-  };
-
-  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      router.get('/data-nilai-siswa', { search }, { preserveState: true, replace: true });
-    }
   };
 
   return (
@@ -104,23 +144,73 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, classes
                 type="text"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                onKeyDown={handleSearch}
               />
             </div>
 
             {/* Filters & Actions */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full xl:w-auto">
-              <div className="flex bg-background rounded-xl p-1 border border-border/50 transition-all w-full sm:w-auto">
-                <button className="flex-1 sm:flex-none px-3 py-1.5 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-lg text-sm font-bold shadow-sm">Ganjil</button>
-                <button className="flex-1 sm:flex-none px-3 py-1.5 text-muted-foreground hover:text-foreground text-sm font-bold transition-colors rounded-lg">Genap</button>
-              </div>
-              <div className="flex items-center gap-2 w-full sm:w-auto">
-                <button className="flex-1 sm:flex-none flex items-center justify-between gap-2 bg-background hover:bg-muted/50 px-4 py-2.5 rounded-xl border border-border/50 hover:border-indigo-500/50 transition-all group">
-                  <div className="flex items-center gap-2">
-                    <Filter className="w-4 h-4 text-muted-foreground group-hover:text-indigo-600" />
-                    <span className="text-sm font-semibold text-muted-foreground group-hover:text-indigo-600 whitespace-nowrap">Kelas: Semua</span>
-                  </div>
-                </button>
+              
+              <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+                
+                {/* Semester Filter */}
+                <div className="flex bg-background rounded-xl p-1 border border-border/50 transition-all w-full sm:w-auto">
+                  <button 
+                    onClick={() => setFilterSemester('all')}
+                    className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-sm font-bold transition-colors ${filterSemester === 'all' ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+                  >
+                    Semua
+                  </button>
+                  <button 
+                    onClick={() => setFilterSemester('Ganjil')}
+                    className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-sm font-bold transition-colors ${filterSemester === 'Ganjil' ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+                  >
+                    Ganjil
+                  </button>
+                  <button 
+                    onClick={() => setFilterSemester('Genap')}
+                    className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-sm font-bold transition-colors ${filterSemester === 'Genap' ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+                  >
+                    Genap
+                  </button>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto p-1 bg-background/50 border border-border/50 rounded-xl">
+                  {/* Academic Year Filter */}
+                  <Select value={filterAy} onValueChange={setFilterAy}>
+                    <SelectTrigger className="w-[140px] sm:w-[150px] bg-transparent border-0 shadow-none focus:ring-0">
+                      <div className="flex items-center gap-2">
+                        <Filter className="w-4 h-4 text-muted-foreground" />
+                        <SelectValue placeholder="Tahun Ajaran" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Semua Tahun</SelectItem>
+                      {availableAcademicYears.map(ay => (
+                        <SelectItem key={ay.id} value={String(ay.id)}>
+                          {ay.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <div className="w-px h-6 bg-border/50 hidden sm:block"></div>
+
+                  {/* Filter Kelas */}
+                  <Select value={filterClass} onValueChange={setFilterClass}>
+                    <SelectTrigger className="w-[130px] sm:w-[150px] bg-transparent border-0 shadow-none focus:ring-0">
+                      <SelectValue placeholder="Pilih Kelas" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Semua Kelas</SelectItem>
+                      {classes.map(cls => (
+                        <SelectItem key={cls.id} value={String(cls.id)}>
+                          {cls.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
               </div>
 
               {/* Import Button */}
@@ -148,7 +238,7 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, classes
           </div>
 
           {/* Actual Table */}
-          <div className="overflow-x-auto bg-background/50">
+          <div className={`overflow-x-auto bg-background/50 transition-opacity duration-300 ${isLoading ? 'opacity-50 pointer-events-none' : ''}`}>
             <table className="w-full text-left border-collapse min-w-[800px]">
               <thead className="bg-muted/30 border-b border-sidebar-border/70 dark:border-sidebar-border">
                 <tr>
@@ -266,8 +356,27 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, classes
                 })}
                 {groupedGrades.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="px-6 py-8 text-center text-muted-foreground text-sm font-medium">
-                      Tidak ada data nilai ditemukan.
+                    <td colSpan={4} className="px-6 py-12 text-center">
+                      <div className="flex flex-col items-center justify-center text-muted-foreground">
+                        <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
+                          <Inbox className="w-8 h-8 text-muted-foreground/50" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-foreground mb-1">Data Tidak Ditemukan</h3>
+                        <p className="text-sm">Tidak ada nilai yang sesuai dengan kriteria pencarian dan filter Anda.</p>
+                        {(search || filterSemester !== 'all' || filterAy !== 'all' || filterClass !== 'all') && (
+                          <button 
+                            onClick={() => {
+                              setSearch('');
+                              setFilterSemester('all');
+                              setFilterAy('all');
+                              setFilterClass('all');
+                            }}
+                            className="mt-4 px-4 py-2 text-sm bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-500/10 dark:hover:bg-indigo-500/20 rounded-lg transition-colors font-medium"
+                          >
+                            Hapus Filter
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 )}

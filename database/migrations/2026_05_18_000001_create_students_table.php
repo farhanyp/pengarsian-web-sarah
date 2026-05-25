@@ -22,6 +22,7 @@ return new class extends Migration
                 $table->string('nis')->unique();
                 $table->string('nisn')->unique();
                 $table->string('name');
+                $table->enum('jenis_kelamin', ['PRIA', 'WANITA']);
                 $table->timestamps();
 
                 // Indexes specified in the ERD

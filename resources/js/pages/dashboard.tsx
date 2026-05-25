@@ -2,163 +2,10 @@ import { Head, usePage } from '@inertiajs/react';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import type { User } from '@/types';
 import {
-    Users, Star, FileText, TrendingUp,
-    BarChart, Table, FileArchive, File,
-    MoreVertical, ArrowRight, Filter, ExternalLink
+    BarChart,
+    ArrowRight, Filter
 } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
-
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
-interface MetricCard {
-    icon: LucideIcon;
-    iconBg: string;
-    iconColor: string;
-    value: string;
-    label: string;
-    badge: string;
-    badgeBg: string;
-    badgeColor: string;
-}
-
-interface RecentDoc {
-    icon: LucideIcon;
-    name: string;
-    meta: string;
-}
-
-interface TopStudent {
-    name: string;
-    nisn: string;
-    major: string;
-    score: number;
-    status: 'Honor Roll' | 'Distinction' | 'Merit';
-    avatarInitials: string;
-    avatarGradient: string;
-}
-
-// ---------------------------------------------------------------------------
-// Static data — replace with real API calls when backend is ready
-// ---------------------------------------------------------------------------
-
-const METRIC_CARDS: MetricCard[] = [
-    {
-        icon: Users,
-        iconBg: 'bg-indigo-500/10',
-        iconColor: 'text-indigo-600 dark:text-indigo-400',
-        value: '1.284',
-        label: 'Total Siswa Terdaftar',
-        badge: '+4.2%',
-        badgeBg: 'bg-green-500/10',
-        badgeColor: 'text-green-600 dark:text-green-400',
-    },
-    {
-        icon: Star,
-        iconBg: 'bg-emerald-500/10',
-        iconColor: 'text-emerald-600 dark:text-emerald-400',
-        value: '88.5',
-        label: 'Rata-rata Nilai Institusi',
-        badge: 'Aman',
-        badgeBg: 'bg-blue-500/10',
-        badgeColor: 'text-blue-600 dark:text-blue-400',
-    },
-    {
-        icon: FileText,
-        iconBg: 'bg-purple-500/10',
-        iconColor: 'text-purple-600 dark:text-purple-400',
-        value: '3.492',
-        label: 'Total Arsip Dokumen',
-        badge: 'Update Harian',
-        badgeBg: 'bg-muted',
-        badgeColor: 'text-muted-foreground',
-    },
-];
-
-const RECENT_DOCS: RecentDoc[] = [
-    { icon: FileText, name: 'Laporan_Semester_2024.pdf', meta: '2.4 MB • 2 jam lalu' },
-    { icon: Table, name: 'Data_Nilai_CS_Final.xlsx', meta: '1.1 MB • 5 jam lalu' },
-    { icon: File, name: 'Update_Kebijakan_Institusi.docx', meta: '450 KB • Kemarin' },
-    { icon: FileArchive, name: 'Arsip_Foto_Fakultas.zip', meta: '142 MB • 2 hari lalu' },
-];
-
-const TOP_STUDENTS: TopStudent[] = [
-    {
-        name: 'Sarah Jenkins',
-        nisn: '#202400122',
-        major: 'MIPA',
-        score: 96.5,
-        status: 'Honor Roll',
-        avatarInitials: 'SJ',
-        avatarGradient: 'from-indigo-500 to-purple-600',
-    },
-    {
-        name: 'Marco Verratti',
-        nisn: '#202400451',
-        major: 'IPS',
-        score: 94.2,
-        status: 'Honor Roll',
-        avatarInitials: 'MV',
-        avatarGradient: 'from-sky-500 to-cyan-500',
-    },
-    {
-        name: 'Elena Rodriguez',
-        nisn: '#202400982',
-        major: 'MIPA',
-        score: 92.8,
-        status: 'Distinction',
-        avatarInitials: 'ER',
-        avatarGradient: 'from-emerald-500 to-teal-500',
-    },
-    {
-        name: 'Budi Santoso',
-        nisn: '#202401105',
-        major: 'Bahasa',
-        score: 91.0,
-        status: 'Distinction',
-        avatarInitials: 'BS',
-        avatarGradient: 'from-amber-500 to-orange-500',
-    },
-];
-
-// ---------------------------------------------------------------------------
-// Sub-components
-// ---------------------------------------------------------------------------
-
-/**
- * Badge variant helper — maps status to colour tokens.
- */
-function StatusBadge({ status }: { status: TopStudent['status'] }) {
-    const styles: Record<TopStudent['status'], string> = {
-        'Honor Roll': 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400',
-        'Distinction': 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
-        'Merit': 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
-    };
-    return (
-        <span
-            className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${styles[status]}`}
-        >
-            {status}
-        </span>
-    );
-}
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-function getGreeting(): string {
-    const hour = new Date().getHours();
-    if (hour < 11) return 'Selamat Pagi';
-    if (hour < 15) return 'Selamat Siang';
-    if (hour < 18) return 'Selamat Sore';
-    return 'Selamat Malam';
-}
-
-// ---------------------------------------------------------------------------
-// Page
-// ---------------------------------------------------------------------------
+import { getGreeting } from '@/lib/utils';
 
 export default function DashboardPage() {
     const { auth } = usePage().props as { auth: { user: User } };
@@ -191,14 +38,15 @@ export default function DashboardPage() {
                 <section aria-labelledby="metrics-heading" className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <h2 id="metrics-heading" className="sr-only">Metrik utama</h2>
 
-                    {[1, 2, 3].map((i) => (
-                        <div
-                            key={i}
-                            className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
-                        >
-                            <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                        </div>
-                    ))}
+                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+                    </div>
+                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+                    </div>
+                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+                    </div>
                 </section>
 
                 {/* ── Main grid ─────────────────────────────────────── */}

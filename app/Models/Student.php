@@ -14,7 +14,8 @@ class Student extends Model
     protected $fillable = [
         'nis',
         'nisn',
-        'name'
+        'name',
+        'jenis_kelamin'
     ];
 
     public function grades(): HasMany

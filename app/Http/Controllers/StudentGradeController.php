@@ -21,14 +21,35 @@ class StudentGradeController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $filterSemester = $request->input('filter_semester');
+        $filterAy = $request->input('filter_ay');
+        $filterClass = $request->input('filter_class');
         
         $grades = StudentGrade::with(['student', 'subject', 'category'])
             ->when($search, function ($query, $search) {
-                $query->whereHas('student', function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%");
-                })->orWhereHas('subject', function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%");
-                })->orWhere('title', 'like', "%{$search}%");
+                $query->where(function($q) use ($search) {
+                    $q->whereHas('student', function ($sq) use ($search) {
+                        $sq->where('name', 'like', "%{$search}%")
+                           ->orWhere('nis', 'like', "%{$search}%")
+                           ->orWhere('nisn', 'like', "%{$search}%");
+                    })->orWhereHas('subject', function ($sq) use ($search) {
+                        $sq->where('name', 'like', "%{$search}%");
+                    })->orWhere('title', 'like', "%{$search}%");
+                });
+            })
+            ->when($filterSemester, function($query, $semester) {
+                $query->where('semester', $semester);
+            })
+            ->when($filterAy, function($query, $ay) {
+                $query->where('academic_year', $ay);
+            })
+            ->when($filterClass, function($query, $classId) use ($filterAy) {
+                $query->whereHas('student.classes', function($sq) use ($classId, $filterAy) {
+                    $sq->where('class_student.class_id', $classId);
+                    if ($filterAy) {
+                        $sq->where('class_student.academic_year', $filterAy);
+                    }
+                });
             })
             ->latest()
             ->paginate(20)
@@ -48,7 +69,7 @@ class StudentGradeController extends Controller
             'subjects' => Subject::select('id', 'name')->orderBy('name')->get(),
             'gradeCategories' => GradeCategory::select('id', 'name', 'default_weight')->orderBy('id')->get(),
             'availableAcademicYears' => $availableAcademicYears,
-            'filters' => $request->only(['search'])
+            'filters' => $request->only(['search', 'filter_semester', 'filter_ay', 'filter_class'])
         ]);
     }
 
