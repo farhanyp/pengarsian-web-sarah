@@ -79,12 +79,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
             $topStudents = $activeYearName ? \Illuminate\Support\Facades\DB::select($topStudentsQuery, [$activeYearName, $activeYearName]) : [];
 
+            $incomingMailCount = \App\Models\IncomingMail::count();
+            $outgoingMailCount = \App\Models\OutgoingMail::count();
+
             return inertia('dashboard', [
                 'studentStats' => [
                     'total' => $totalStudents,
                     'pria' => $totalMale,
                     'wanita' => $totalFemale,
                     'academic_year' => $activeYearName
+                ],
+                'documentStats' => [
+                    'incoming' => $incomingMailCount,
+                    'outgoing' => $outgoingMailCount,
                 ],
                 'classPerformances' => $classPerformances,
                 'recentDocuments' => $recentDocuments,

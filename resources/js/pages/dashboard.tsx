@@ -3,18 +3,19 @@ import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import type { User } from '@/types';
 import {
     BarChart,
-    ArrowRight, Filter, Users, FileText, Clock
+    ArrowRight, Filter, Users, FileText, Clock, Inbox, Send
 } from 'lucide-react';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { getGreeting } from '@/lib/utils';
 
 export default function DashboardPage() {
-    const { auth, studentStats, classPerformances, recentDocuments, topStudents } = usePage().props as {
+    const { auth, studentStats, classPerformances, recentDocuments, topStudents, documentStats } = usePage().props as {
         auth: { user: User },
         studentStats?: { total: number, pria: number, wanita: number, academic_year: string | null },
         classPerformances?: { name: string, average_score: number }[],
         recentDocuments?: { id: string, title: string, status: string, created_at: string, creator: { name: string } }[],
-        topStudents?: { student_id: string, student_name: string, nisn: string, class_name: string, average_score: number, rnk: number }[]
+        topStudents?: { student_id: string, student_name: string, nisn: string, class_name: string, average_score: number, rnk: number }[],
+        documentStats?: { incoming: number, outgoing: number }
     };
     const firstName = auth.user?.name?.split(' ')[0] ?? 'Admin';
 
@@ -80,11 +81,34 @@ export default function DashboardPage() {
                             </div>
                         </div>
                     </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+                    <div className="bg-background/60 backdrop-blur-xl border border-border/50 p-6 rounded-2xl flex flex-col shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.20)] hover:-translate-y-1 hover:shadow-[0_10px_40px_rgb(0,0,0,0.08)] transition-all duration-300 group">
+                        <div className="flex items-center gap-4 mb-4">
+                            <div className="p-3 bg-emerald-500/10 dark:bg-emerald-500/20 rounded-xl group-hover:bg-emerald-500/20 transition-colors">
+                                <Inbox className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
+                            </div>
+                            <div>
+                                <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider text-[11px]">Surat Masuk</p>
+                                <h3 className="text-3xl font-extrabold tracking-tight text-foreground">{documentStats?.incoming ?? 0}</h3>
+                            </div>
+                        </div>
+                        <div className="mt-auto pt-4 border-t border-border/50">
+                            <p className="text-xs text-muted-foreground">Total arsipan surat masuk yang terdata.</p>
+                        </div>
                     </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+                    
+                    <div className="bg-background/60 backdrop-blur-xl border border-border/50 p-6 rounded-2xl flex flex-col shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.20)] hover:-translate-y-1 hover:shadow-[0_10px_40px_rgb(0,0,0,0.08)] transition-all duration-300 group">
+                        <div className="flex items-center gap-4 mb-4">
+                            <div className="p-3 bg-blue-500/10 dark:bg-blue-500/20 rounded-xl group-hover:bg-blue-500/20 transition-colors">
+                                <Send className="w-7 h-7 text-blue-600 dark:text-blue-400" />
+                            </div>
+                            <div>
+                                <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider text-[11px]">Surat Keluar</p>
+                                <h3 className="text-3xl font-extrabold tracking-tight text-foreground">{documentStats?.outgoing ?? 0}</h3>
+                            </div>
+                        </div>
+                        <div className="mt-auto pt-4 border-t border-border/50">
+                            <p className="text-xs text-muted-foreground">Total arsipan surat keluar yang terdata.</p>
+                        </div>
                     </div>
                 </section>
 
