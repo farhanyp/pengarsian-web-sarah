@@ -41,7 +41,7 @@ return new class extends Migration
                 $table->unsignedBigInteger($columnNames['team_foreign_key'])->nullable();
                 $table->index($columnNames['team_foreign_key'], 'roles_team_foreign_key_index');
             }
-            $table->enum('name', ['SUPERADMIN', 'ADMIN', 'GURU', 'KEPALA_SEKOLAH']);
+            $table->enum('name', ['SUPERADMIN', 'ADMIN', 'GURU', 'KEPALA_SEKOLAH', 'WALI_KELAS']);
             $table->string('guard_name');
             $table->timestamps();
             if ($teams || config('permission.testing')) {

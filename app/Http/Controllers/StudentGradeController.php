@@ -25,7 +25,19 @@ class StudentGradeController extends Controller
         $filterAy = $request->input('filter_ay');
         $filterClass = $request->input('filter_class');
         
+        $user = Auth::user();
+        $isWaliKelas = $user && $user->hasRole('WALI_KELAS');
+        
         $grades = StudentGrade::with(['student', 'subject', 'category'])
+            ->when($isWaliKelas, function ($query) use ($user) {
+                $query->whereHas('student.classes', function ($q) use ($user) {
+                    $q->whereIn('classes.id', function($subQuery) use ($user) {
+                        $subQuery->select('class_id')
+                                 ->from('class_teachers')
+                                 ->where('teacher_id', $user->id);
+                    });
+                });
+            })
             ->when($search, function ($query, $search) {
                 $query->where(function($q) use ($search) {
                     $q->whereHas('student', function ($sq) use ($search) {
@@ -62,10 +74,20 @@ class StudentGradeController extends Controller
             ];
         });
 
+        $classesQuery = SchoolClass::select('id', 'name')->orderBy('name');
+        if ($isWaliKelas) {
+            $classesQuery->whereIn('id', function($subQuery) use ($user) {
+                $subQuery->select('class_id')
+                         ->from('class_teachers')
+                         ->where('teacher_id', $user->id);
+            });
+        }
+        $classes = $classesQuery->get();
+
         return Inertia::render('nilai-siswa/Index', [
             'grades' => $grades,
             'students' => Student::select('id', 'name', 'nis')->orderBy('name')->get(),
-            'classes' => SchoolClass::select('id', 'name')->orderBy('name')->get(),
+            'classes' => $classes,
             'subjects' => Subject::select('id', 'name')->orderBy('name')->get(),
             'gradeCategories' => GradeCategory::select('id', 'name', 'default_weight')->orderBy('id')->get(),
             'availableAcademicYears' => $availableAcademicYears,

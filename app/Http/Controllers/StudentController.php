@@ -23,8 +23,20 @@ class StudentController extends Controller
         $filterClass = $request->input('filter_class');
         $sortName = $request->input('sort_name');
         
+        $user = \Illuminate\Support\Facades\Auth::user();
+        $isWaliKelas = $user && $user->hasRole('WALI_KELAS');
+        
         $students = Student::query()
             ->with('classes')
+            ->when($isWaliKelas, function ($query) use ($user) {
+                $query->whereHas('classes', function ($q) use ($user) {
+                    $q->whereIn('classes.id', function($subQuery) use ($user) {
+                        $subQuery->select('class_id')
+                                 ->from('class_teachers')
+                                 ->where('teacher_id', $user->id);
+                    });
+                });
+            })
             ->when($search, function ($query, $search) {
                 $query->where(function($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
@@ -51,7 +63,15 @@ class StudentController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        $availableClasses = SchoolClass::orderBy('name')->get(['id', 'name']);
+        $availableClassesQuery = SchoolClass::orderBy('name');
+        if ($isWaliKelas) {
+            $availableClassesQuery->whereIn('id', function($subQuery) use ($user) {
+                $subQuery->select('class_id')
+                         ->from('class_teachers')
+                         ->where('teacher_id', $user->id);
+            });
+        }
+        $availableClasses = $availableClassesQuery->get(['id', 'name']);
         $availableAcademicYears = AcademicYear::orderByDesc('year')->get()->map(function($ay) {
             return [
                 'id' => $ay->year,

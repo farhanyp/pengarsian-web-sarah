@@ -6,8 +6,8 @@ use App\Http\Controllers\StudentController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
     
-    // Semua role (ADMIN, GURU, KEPALA_SEKOLAH) bisa akses dashboard
-    Route::middleware(['role:ADMIN|GURU|KEPALA_SEKOLAH|SUPERADMIN'])->group(function () {
+    // Semua role (ADMIN, GURU, KEPALA_SEKOLAH, WALI_KELAS) bisa akses dashboard
+    Route::middleware(['role:ADMIN|GURU|KEPALA_SEKOLAH|SUPERADMIN|WALI_KELAS'])->group(function () {
         Route::get('/', function () {
             $activeYear = \App\Models\AcademicYear::where('is_active', true)->first();
             $activeYearName = $activeYear ? $activeYear->year : null;
@@ -100,8 +100,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         })->name('dashboard');
     });
 
-    // Akses READ (Index) untuk berbagai fitur yang diperbolehkan bagi GURU & KEPALA_SEKOLAH
-    Route::middleware(['role:ADMIN|GURU|SUPERADMIN|KEPALA_SEKOLAH'])->group(function () {
+    // Akses READ (Index) untuk berbagai fitur yang diperbolehkan bagi GURU & KEPALA_SEKOLAH & WALI_KELAS
+    Route::middleware(['role:ADMIN|GURU|SUPERADMIN|KEPALA_SEKOLAH|WALI_KELAS'])->group(function () {
         Route::get('/data-siswa', [StudentController::class, 'index'])->name('data-siswa.index');
         Route::get('/data-siswa/download-report', [StudentController::class, 'downloadReport'])->name('data-siswa.download-report');
         Route::get('/data-nilai-siswa', [\App\Http\Controllers\StudentGradeController::class, 'index'])->name('data-nilai-siswa.index');
