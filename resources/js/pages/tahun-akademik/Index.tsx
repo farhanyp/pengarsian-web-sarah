@@ -86,7 +86,7 @@ export default function TahunAkademikPage({ academicYears, filters }: Props) {
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest w-24">No</th>
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">Tahun Akademik</th>
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">Status</th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest text-right w-32">Actions</th>
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest text-right w-32">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/50">
@@ -118,14 +118,14 @@ export default function TahunAkademikPage({ academicYears, filters }: Props) {
                         <button
                           onClick={() => setEditingItem(item)}
                           className="p-2 hover:bg-indigo-500/10 text-indigo-600 rounded-lg transition-all"
-                          title="Update"
+                          title="Ubah"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => setDeletingItem(item)}
                           className="p-2 hover:bg-red-500/10 text-red-600 rounded-lg transition-all"
-                          title="Delete"
+                          title="Hapus"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

@@ -51,7 +51,7 @@ export default function EditModal({ isOpen, onClose, academicYear }: Props) {
 
       <div className="relative bg-background w-full max-w-lg rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.30)] overflow-hidden flex flex-col border border-border/50 animate-in fade-in zoom-in duration-200 m-4">
         <div className="p-6 border-b border-border/50 flex items-center justify-between bg-muted/20">
-          <h3 className="text-xl font-bold tracking-tight text-foreground">Edit Tahun Akademik</h3>
+          <h3 className="text-xl font-bold tracking-tight text-foreground">Ubah Tahun Akademik</h3>
           <button 
             type="button"
             onClick={onClose}
