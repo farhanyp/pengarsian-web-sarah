@@ -95,7 +95,7 @@ export function AppSidebar({
                         }`}
                 >
                     <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600 leading-tight">
-                        ScholarSys
+                        SD Harapan 2 Tahfidz
                     </h1>
                     <p className="text-[10px] text-muted-foreground font-semibold tracking-wider uppercase">
                         Manajemen Institusi

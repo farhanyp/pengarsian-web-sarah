@@ -57,7 +57,7 @@ export default function UsersManagementPage({ users, filters }: Props) {
               Manajemen Pengguna
             </h2>
             <p className="text-sm md:text-base text-muted-foreground mt-1 font-medium">
-              Kelola role dan hak akses pengguna sistem ScholarSys.
+              Kelola role dan hak akses pengguna sistem SD Harapan 2 Tahfidz.
             </p>
           </div>
         </div>
