@@ -85,7 +85,7 @@ export default function MataPelajaranPage({ subjects, filters }: Props) {
                 <tr>
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest w-24">No</th>
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">Nama Mata Pelajaran</th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest text-right w-32">Actions</th>
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest text-right w-32">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/50">
@@ -105,14 +105,14 @@ export default function MataPelajaranPage({ subjects, filters }: Props) {
                         <button
                           onClick={() => setEditingSubject(item)}
                           className="p-2 hover:bg-indigo-500/10 text-indigo-600 rounded-lg transition-all"
-                          title="Update"
+                          title="Ubah"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => setDeletingSubject(item)}
                           className="p-2 hover:bg-red-500/10 text-red-600 rounded-lg transition-all"
-                          title="Delete"
+                          title="Hapus"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

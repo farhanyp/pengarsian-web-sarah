@@ -98,7 +98,7 @@ export default function WaliKelasIndex({ classTeachers, teachers, classes, acade
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">Nama Wali Kelas</th>
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">Kelas</th>
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">Tahun Akademik</th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest text-right w-32">Actions</th>
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest text-right w-32">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/50">
@@ -129,14 +129,14 @@ export default function WaliKelasIndex({ classTeachers, teachers, classes, acade
                         <button
                           onClick={() => setEditingAssignment(item)}
                           className="p-2 hover:bg-indigo-500/10 text-indigo-600 rounded-lg transition-all"
-                          title="Update"
+                          title="Ubah"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => setDeletingAssignment(item)}
                           className="p-2 hover:bg-red-500/10 text-red-600 rounded-lg transition-all"
-                          title="Delete"
+                          title="Hapus"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
