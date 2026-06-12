@@ -12,7 +12,7 @@ import {
     LayoutDashboard, Users, GraduationCap,
     Database, School, ChevronRight, ChevronLeft,
     ChevronsUpDown, User as UserIcon,
-    UserRound,
+    UserRound, UserCheck,
     Calendar, BookOpen
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -44,6 +44,7 @@ export const navItems: NavItem[] = [
     { name: 'Tahun Akademik', icon: Calendar, path: '/tahun-akademik', roles: ['ADMIN', 'SUPERADMIN'] },
     { name: 'Kelas', icon: UserRound, path: '/kelas', roles: ['ADMIN', 'SUPERADMIN'] },
     { name: 'Mata Pelajaran', icon: BookOpen, path: '/mata-pelajaran', roles: ['ADMIN', "SUPERADMIN"] },
+    { name: 'Wali Kelas Management', icon: UserCheck, path: '/wali-kelas-management', roles: ['ADMIN', 'SUPERADMIN', 'KEPALA_SEKOLAH'] },
     { name: 'Data Siswa', icon: Users, path: '/data-siswa', roles: ['ADMIN', 'GURU', 'KEPALA_SEKOLAH', "SUPERADMIN", 'WALI_KELAS'] },
     { name: 'Data Nilai Siswa', icon: GraduationCap, path: '/data-nilai-siswa', roles: ['ADMIN', 'GURU', 'KEPALA_SEKOLAH', "SUPERADMIN", 'WALI_KELAS'] },
     { name: 'Repositori Dokumen', icon: Database, path: '/dokumen', roles: ['ADMIN', 'KEPALA_SEKOLAH', "SUPERADMIN"] },
@@ -85,8 +86,8 @@ export function AppSidebar({
         >
             {/* ── Brand / Logo ─────────────────────────────────────────── */}
             <div className="p-4 flex items-center gap-3 overflow-hidden whitespace-nowrap h-[72px]">
-                <div className="w-10 h-10 shrink-0 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/30 flex items-center justify-center transition-transform hover:scale-105">
-                    <School className="w-5 h-5 text-white" strokeWidth={2.5} />
+                <div className="w-10 h-10 shrink-0 rounded-xl overflow-hidden shadow-lg flex items-center justify-center transition-transform hover:scale-105">
+                    <img src="/sd-it-harapan2.jpg" alt="Logo" className="w-full h-full object-cover" />
                 </div>
 
                 <div

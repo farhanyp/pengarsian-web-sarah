@@ -111,6 +111,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Akses READ Dokumen (GURU tidak memiliki akses)
     Route::middleware(['role:ADMIN|SUPERADMIN|KEPALA_SEKOLAH'])->group(function () {
         Route::get('/dokumen', [\App\Http\Controllers\DocumentController::class, 'index'])->name('dokumen.index');
+        Route::resource('wali-kelas-management', \App\Http\Controllers\ClassTeacherController::class)
+            ->parameters(['wali-kelas-management' => 'classTeacher']);
     });
 
     // Hanya ADMIN dan SUPERADMIN yang bisa menambah, mengubah, dan menghapus (Write Access)
