@@ -10,23 +10,21 @@ class SubjectSeeder extends Seeder
     public function run(): void
     {
         $subjects = [
-            'Pendidikan Agama Islam',
-            'Pendidikan Pancasila dan Kewarganegaraan',
+            'Pendidikan Agama dan Budi Pekerti',
+            'Pendidikan Pancasila',
             'Bahasa Indonesia',
-            'Matematika Wajib',
-            'Sejarah Indonesia',
+            'Matematika',
+            'Seni dan Budaya',
+            'Pendidikan Jasmani Olahraga dan Kesehatan',
             'Bahasa Inggris',
-            'Seni Budaya',
-            'Pendidikan Jasmani, Olahraga, dan Kesehatan',
-            'Prakarya dan Kewirausahaan',
-            'Matematika Peminatan',
-            'Fisika',
-            'Biologi',
-            'Kimia',
-            'Ekonomi',
-            'Sosiologi',
-            'Geografi',
-            'Bahasa Arab'
+            'Teknologi Informasi dan Komunikasi',
+            'Tahfidz',
+            'Tahsin',
+            'Murojaah',
+            "Al-Qur'an Hadist",
+            'Fiqih',
+            'Akidah Akhlak',
+            'Sejarah Kebudayaan Islam',
         ];
 
         foreach ($subjects as $subjectName) {

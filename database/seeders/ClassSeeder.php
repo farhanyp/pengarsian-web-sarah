@@ -10,9 +10,18 @@ class ClassSeeder extends Seeder
     public function run(): void
     {
         $classes = [
-            '10 MIPA 1', '10 MIPA 2', '10 IPS 1', '10 IPS 2',
-            '11 MIPA 1', '11 MIPA 2', '11 IPS 1', '11 IPS 2',
-            '12 MIPA 1', '12 MIPA 2', '12 IPS 1', '12 IPS 2',
+            'Kelas 1 A',
+            'Kelas 1 B',
+            'Kelas 2 A',
+            'Kelas 2 B',
+            'Kelas 2 C',
+            'Kelas 3 A',
+            'Kelas 3 B',
+            'Kelas 4 A',
+            'Kelas 4 B',
+            'Kelas 5 A',
+            'Kelas 5 B',
+            'Kelas 6',
         ];
 
         foreach ($classes as $className) {

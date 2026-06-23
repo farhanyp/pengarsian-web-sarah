@@ -66,17 +66,44 @@ class RoleAndUserSeeder extends Seeder
             $guru->assignRole($guruRole);
         }
 
-        // Create 5 Wali Kelas
-        for ($i = 1; $i <= 5; $i++) {
+        // Create Wali Kelas based on requirements
+        $waliKelasData = [
+            ['name' => 'Khelara Permata Sari,S.Pd', 'classes' => ['Kelas 1 A']],
+            ['name' => 'Yuni Bayu Ningsih,S.Pd', 'classes' => ['Kelas 1 B']],
+            ['name' => 'Siti Afni,S.Pd', 'classes' => ['Kelas 2 A']],
+            ['name' => 'Jumiran,S.Ag', 'classes' => ['Kelas 2 B']],
+            ['name' => 'Hermayani Purba,S.Pd', 'classes' => ['Kelas 2 C']],
+            ['name' => 'Riska Nurhamidah,S.Pd.,Gr.', 'classes' => ['Kelas 3 A']],
+            ['name' => 'Indah Sri Annisa,S.Pd.,Gr.', 'classes' => ['Kelas 3 B']],
+            ['name' => 'Rahmat May Sandi,S.PdI', 'classes' => ['Kelas 4 A']],
+            ['name' => 'Drs. H. Salman', 'classes' => ['Kelas 4 A']],
+            ['name' => 'Hervita Puji Pratiwi,S.Pd.,Gr.', 'classes' => ['Kelas 5 A', 'Kelas 5 B']],
+        ];
+
+        $activeYear = \App\Models\AcademicYear::firstOrCreate(['year' => '2025/2026', 'is_active' => true])->year;
+
+        foreach ($waliKelasData as $data) {
+            $emailName = str_replace(' ', '', strtolower(explode(',', str_replace('.', '', $data['name']))[0]));
+            $email = $emailName . '@scholarsys.edu';
+            
             $wali = User::firstOrCreate(
-                ['email' => "walikelas{$i}@scholarsys.edu"],
+                ['email' => $email],
                 [
-                    'name' => "Wali Kelas {$i}",
+                    'name' => $data['name'],
                     'password' => Hash::make('password'),
                     'role_type' => RoleType::WALI_KELAS->value,
                 ]
             );
             $wali->assignRole($waliKelasRole);
+
+            foreach ($data['classes'] as $className) {
+                $schoolClass = \App\Models\SchoolClass::firstOrCreate(['name' => $className]);
+                \App\Models\ClassTeacher::firstOrCreate([
+                    'class_id' => $schoolClass->id,
+                    'teacher_id' => $wali->id,
+                    'academic_year' => $activeYear,
+                ]);
+            }
         }
     }
 }
