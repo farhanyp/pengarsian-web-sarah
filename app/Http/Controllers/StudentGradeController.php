@@ -142,7 +142,6 @@ class StudentGradeController extends Controller
     {
         $request->validate([
             'file' => 'required|file|mimes:xlsx,xls',
-            'subject_id' => 'required|exists:subjects,id',
             'semester' => 'required|string|in:Ganjil,Genap',
             'academic_year' => 'required|string',
         ]);
@@ -152,7 +151,6 @@ class StudentGradeController extends Controller
             $file = $request->file('file');
             $importService->import(
                 $file->getRealPath(),
-                $request->input('subject_id'),
                 $request->input('semester'),
                 $request->input('academic_year'),
                 Auth::id()
@@ -171,66 +169,39 @@ class StudentGradeController extends Controller
     public function downloadTemplate(Request $request)
     {
         $request->validate([
-            'subject_id' => 'required|exists:subjects,id',
+            'subject_ids' => 'required|string',
+            'class_ids' => 'required|string',
             'semester' => 'required|string|in:Ganjil,Genap',
             'academic_year' => 'required|string',
         ]);
 
-        $subjectName = Subject::find($request->input('subject_id'))->name;
+        $subjectIds = explode(',', $request->input('subject_ids'));
+        $classIds = explode(',', $request->input('class_ids'));
+        
+        $subjects = Subject::whereIn('id', $subjectIds)->orderBy('name')->get();
         $semester = $request->input('semester');
         $academicYear = $request->input('academic_year');
 
-        // Fetch students who belong to active classes in the selected academic year, or filter by student_ids
-        $studentsQuery = Student::query();
-
-        if ($request->filled('student_ids')) {
-            $studentIds = explode(',', $request->input('student_ids'));
-            $studentsQuery->whereIn('id', $studentIds);
-        } else {
-            $studentsQuery->whereHas('classes', function ($query) use ($academicYear) {
-                $query->where('class_student.academic_year', $academicYear);
-            });
-        }
-
-        $students = $studentsQuery->orderBy('name')->get();
+        // Fetch students who belong to selected classes
+        $students = Student::whereHas('classes', function ($query) use ($classIds) {
+            $query->whereIn('class_student.class_id', $classIds);
+        })->orderBy('name')->get();
 
         if ($students->isEmpty()) {
-            $students = Student::orderBy('name')->get();
+            return redirect()->back()->with('error', 'Tidak ada siswa ditemukan di kelas yang dipilih.');
         }
 
         // Create spreadsheet
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('Data Nilai');
-
-        // Styles
-        $sheet->setCellValue('A1', 'SISTEM INFORMASI AKADEMIK (SIAKAD) SD HARAPAN');
-        $sheet->setCellValue('A2', 'Mata Pelajaran: ' . $subjectName);
-        $sheet->setCellValue('A3', 'Semester: ' . $semester);
-        $sheet->setCellValue('A4', 'Tahun Ajaran: ' . $academicYear);
-        $sheet->setCellValue('A5', 'Petunjuk: Isi nilai pada kolom F (Nilai) ke arah bawah. Jangan edit/hapus ID Siswa (Kolom A), NIS (Kolom B), atau Nama (Kolom C).');
-
-        // Merge headers
-        $sheet->mergeCells('A1:F1');
-        $sheet->mergeCells('A5:F5');
-
-        // Styling title
-        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
-        $sheet->getStyle('A2:A4')->getFont()->setBold(true);
-        $sheet->getStyle('A5')->getFont()->setItalic(true)->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
+        
+        // Remove the default sheet that PhpSpreadsheet creates
+        $spreadsheet->removeSheetByIndex(0);
 
         // Subheaders
         $headers = [
-            'ID Siswa', 'NIS', 'Nama Siswa', 
-            'Kategori', 'Nama / Judul', 'Nilai'
+            'ID Mapel', 'Mata Pelajaran', 'Kategori', 'Nama / Judul', 'Nilai'
         ];
         
-        foreach ($headers as $index => $header) {
-            $colLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index + 1);
-            $sheet->setCellValue($colLetter . '6', $header);
-        }
-
-        // Style subheaders row 6
         $headerStyle = [
             'font' => ['bold' => true],
             'fill' => [
@@ -246,10 +217,7 @@ class StudentGradeController extends Controller
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
             ]
         ];
-        $sheet->getStyle('A6:F6')->applyFromArray($headerStyle);
 
-        // Fill Student data vertically (3 rows per student for Tasks, UTS, UAS as default guide)
-        $row = 7;
         $defaultAssessments = [
             ['category' => 'Tugas', 'title' => 'Tugas 1'],
             ['category' => 'UTS', 'title' => 'UTS Semester'],
@@ -257,26 +225,65 @@ class StudentGradeController extends Controller
         ];
 
         foreach ($students as $student) {
-            foreach ($defaultAssessments as $assessment) {
-                $sheet->setCellValue('A' . $row, $student->id);
-                $sheet->setCellValue('B' . $row, $student->nis);
-                $sheet->setCellValue('C' . $row, $student->name);
-                $sheet->setCellValue('D' . $row, $assessment['category']);
-                $sheet->setCellValue('E' . $row, $assessment['title']);
-                $sheet->setCellValue('F' . $row, ''); // Blank for teacher to fill
+            $sheet = $spreadsheet->createSheet();
+            
+            // Sanitize sheet title (max 31 chars, remove invalid chars)
+            $sheetTitle = substr(str_replace(['*', ':', '/', '\\', '?', '[', ']'], '', $student->name), 0, 31);
+            $sheet->setTitle($sheetTitle);
 
-                // Apply borders
-                $sheet->getStyle("A{$row}:F{$row}")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-                
-                $row++;
+            // Styles & Header Metadata
+            $sheet->setCellValue('A1', 'SISTEM INFORMASI AKADEMIK (SIAKAD) SD HARAPAN');
+            $sheet->setCellValue('A2', 'Nama Siswa: ' . $student->name . ' (' . $student->nis . ')');
+            $sheet->setCellValue('A3', 'ID Siswa: ' . $student->id);
+            $sheet->setCellValue('A4', 'Semester: ' . $semester . ' | Tahun Ajaran: ' . $academicYear);
+            $sheet->setCellValue('A5', 'Petunjuk: Isi nilai pada kolom E (Nilai). Tambah baris baru jika perlu, tapi jangan ubah/hapus ID Siswa dan ID Mapel.');
+
+            // Merge metadata headers
+            $sheet->mergeCells('A1:E1');
+            $sheet->mergeCells('A5:E5');
+
+            // Styling metadata
+            $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+            $sheet->getStyle('A2:A4')->getFont()->setBold(true);
+            $sheet->getStyle('A5')->getFont()->setItalic(true)->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
+
+            // Set subheaders
+            foreach ($headers as $index => $header) {
+                $colLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index + 1);
+                $sheet->setCellValue($colLetter . '6', $header);
+            }
+            $sheet->getStyle('A6:E6')->applyFromArray($headerStyle);
+
+            // Fill rows per subject
+            $row = 7;
+            foreach ($subjects as $subject) {
+                foreach ($defaultAssessments as $assessment) {
+                    $sheet->setCellValue('A' . $row, $subject->id);
+                    $sheet->setCellValue('B' . $row, $subject->name);
+                    $sheet->setCellValue('C' . $row, $assessment['category']);
+                    $sheet->setCellValue('D' . $row, $assessment['title']);
+                    $sheet->setCellValue('E' . $row, ''); // Blank for teacher to fill
+
+                    // Apply borders
+                    $sheet->getStyle("A{$row}:E{$row}")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                    
+                    $row++;
+                }
+            }
+
+            // Set column auto-size
+            foreach (range(1, 5) as $colIndex) {
+                $colLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colIndex);
+                $sheet->getColumnDimension($colLetter)->setAutoSize(true);
             }
         }
 
-        // Set column auto-size
-        foreach (range(1, 6) as $colIndex) {
-            $colLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colIndex);
-            $sheet->getColumnDimension($colLetter)->setAutoSize(true);
+        // If no sheets created (e.g. no students), create a dummy sheet to prevent corrupt Excel
+        if ($spreadsheet->getSheetCount() == 0) {
+            $spreadsheet->createSheet()->setTitle('No Data');
         }
+
+        $spreadsheet->setActiveSheetIndex(0);
 
         // Clean output buffers to prevent corrupt files
         if (ob_get_length()) ob_end_clean();
@@ -290,7 +297,7 @@ class StudentGradeController extends Controller
             200,
             [
                 'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                'Content-Disposition' => 'attachment; filename="template-import-nilai-' . str_replace(' ', '-', strtolower($subjectName)) . '.xlsx"',
+                'Content-Disposition' => 'attachment; filename="template-import-nilai-multi.xlsx"',
                 'Cache-Control' => 'max-age=0',
             ]
         );

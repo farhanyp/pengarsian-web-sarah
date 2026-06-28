@@ -19,8 +19,7 @@ class ClassSeeder extends Seeder
             'Kelas 3 B',
             'Kelas 4 A',
             'Kelas 4 B',
-            'Kelas 5 A',
-            'Kelas 5 B',
+            'Kelas 5',
             'Kelas 6',
         ];
 

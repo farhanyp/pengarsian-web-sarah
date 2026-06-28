@@ -22,7 +22,7 @@ export default function DownloadNilaiModal({ isOpen, onClose, students, subjects
         academic_year: availableAcademicYears[0]?.id || '',
         semester_ids: [] as string[],
         class_ids: [] as number[],
-        mapel_ids: [] as number[],
+        mapel_ids: [] as string[],
         siswa_ids: [] as string[],
     });
 

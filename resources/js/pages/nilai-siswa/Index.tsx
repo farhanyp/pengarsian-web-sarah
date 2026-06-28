@@ -85,7 +85,7 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, classes
       const studentId = grade.student?.id;
       if (!studentId) return;
       if (!groups[studentId]) {
-        groups[studentId] = { student: grade.student, grades: [] };
+        groups[studentId] = { student: grade.student!, grades: [] };
       }
       groups[studentId].grades.push(grade);
     });
@@ -444,7 +444,7 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, classes
         isOpen={isImportModalOpen}
         onClose={() => setIsImportModalOpen(false)}
         subjects={subjects}
-        students={students}
+        classes={classes}
         availableAcademicYears={availableAcademicYears}
       />
 

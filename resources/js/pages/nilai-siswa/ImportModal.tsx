@@ -2,58 +2,89 @@ import { useForm } from '@inertiajs/react';
 import { FormEvent, useRef, useState, useEffect } from 'react';
 import { X, Loader2, FileSpreadsheet, Upload, AlertCircle, CheckCircle, Download, Search } from 'lucide-react';
 import { toast } from 'sonner';
-import SearchableSelect, { Option } from '@/components/SearchableSelect';
 
-import { Student, Subject, AcademicYearOption } from '@/types/nilai-siswa';
+import { Subject, AcademicYearOption } from '@/types/nilai-siswa';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   subjects: Subject[];
-  students: Student[];
+  classes: { id: number; name: string }[];
   availableAcademicYears: AcademicYearOption[];
 }
 
-export default function ImportModal({ isOpen, onClose, subjects, students, availableAcademicYears }: Props) {
+export default function ImportModal({ isOpen, onClose, subjects, classes, availableAcademicYears }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
 
   const { data, setData, post, processing, errors, reset } = useForm({
-    subject_id: '',
     semester: 'Ganjil',
     academic_year: availableAcademicYears[0]?.id || '2025/2026',
     file: null as File | null,
   });
 
-  const [selectedStudentIds, setSelectedStudentIds] = useState<string[]>([]);
-  const [searchStudentQuery, setSearchStudentQuery] = useState('');
+  const [selectedSubjectIds, setSelectedSubjectIds] = useState<string[]>([]);
+  const [searchSubjectQuery, setSearchSubjectQuery] = useState('');
+
+  const [selectedClassIds, setSelectedClassIds] = useState<number[]>([]);
+  const [searchClassQuery, setSearchClassQuery] = useState('');
 
   useEffect(() => {
     if (isOpen) {
-      setSelectedStudentIds(students.map(s => s.id));
-      setSearchStudentQuery('');
+      setSelectedSubjectIds(subjects.map(s => s.id));
+      setSelectedClassIds(classes.map(c => c.id));
+      setSearchSubjectQuery('');
+      setSearchClassQuery('');
     }
-  }, [isOpen, students]);
+  }, [isOpen, subjects, classes]);
 
-  const filteredStudents = students.filter(s => 
-    s.name.toLowerCase().includes(searchStudentQuery.toLowerCase()) ||
-    s.nis.toLowerCase().includes(searchStudentQuery.toLowerCase())
+  const filteredSubjects = subjects.filter(s => 
+    s.name.toLowerCase().includes(searchSubjectQuery.toLowerCase())
   );
 
-  const toggleStudent = (id: string) => {
-    setSelectedStudentIds(prev => 
+  const filteredClasses = classes.filter(c => 
+    c.name.toLowerCase().includes(searchClassQuery.toLowerCase())
+  );
+
+  const toggleSubject = (id: string) => {
+    setSelectedSubjectIds(prev => 
       prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
     );
   };
 
-  const toggleSelectAll = () => {
-    const allFilteredIds = filteredStudents.map(s => s.id);
-    const areAllFilteredSelected = allFilteredIds.every(id => selectedStudentIds.includes(id));
+  const toggleSelectAllSubjects = () => {
+    const allFilteredIds = filteredSubjects.map(s => s.id);
+    const areAllFilteredSelected = allFilteredIds.every(id => selectedSubjectIds.includes(id));
     
     if (areAllFilteredSelected) {
-      setSelectedStudentIds(prev => prev.filter(id => !allFilteredIds.includes(id)));
+      setSelectedSubjectIds(prev => prev.filter(id => !allFilteredIds.includes(id)));
     } else {
-      setSelectedStudentIds(prev => {
+      setSelectedSubjectIds(prev => {
+        const newSelection = [...prev];
+        allFilteredIds.forEach(id => {
+          if (!newSelection.includes(id)) {
+            newSelection.push(id);
+          }
+        });
+        return newSelection;
+      });
+    }
+  };
+
+  const toggleClass = (id: number) => {
+    setSelectedClassIds(prev => 
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAllClasses = () => {
+    const allFilteredIds = filteredClasses.map(c => c.id);
+    const areAllFilteredSelected = allFilteredIds.every(id => selectedClassIds.includes(id));
+    
+    if (areAllFilteredSelected) {
+      setSelectedClassIds(prev => prev.filter(id => !allFilteredIds.includes(id)));
+    } else {
+      setSelectedClassIds(prev => {
         const newSelection = [...prev];
         allFilteredIds.forEach(id => {
           if (!newSelection.includes(id)) {
@@ -66,16 +97,17 @@ export default function ImportModal({ isOpen, onClose, subjects, students, avail
   };
 
   const handleDownloadTemplate = () => {
-    if (!data.subject_id) {
-      toast.error("Harap pilih mata pelajaran terlebih dahulu untuk mengunduh template spesifik.");
+    if (selectedSubjectIds.length === 0) {
+      toast.error("Harap pilih minimal 1 mata pelajaran untuk diunduh.");
       return;
     }
-    if (selectedStudentIds.length === 0) {
-      toast.error("Harap pilih minimal 1 siswa untuk dimasukkan ke dalam template.");
+    if (selectedClassIds.length === 0) {
+      toast.error("Harap pilih minimal 1 kelas untuk dimasukkan ke dalam template.");
       return;
     }
-    const studentIdsParam = selectedStudentIds.join(',');
-    const url = `/data-nilai-siswa/template?subject_id=${data.subject_id}&semester=${data.semester}&academic_year=${data.academic_year}&student_ids=${studentIdsParam}`;
+    const subjectIdsParam = selectedSubjectIds.join(',');
+    const classIdsParam = selectedClassIds.join(',');
+    const url = `/data-nilai-siswa/template?semester=${data.semester}&academic_year=${data.academic_year}&subject_ids=${subjectIdsParam}&class_ids=${classIdsParam}`;
     window.open(url, '_blank');
   };
 
@@ -104,11 +136,6 @@ export default function ImportModal({ isOpen, onClose, subjects, students, avail
       }
     });
   };
-
-  const subjectOptions: Option[] = subjects.map(s => ({
-    id: s.id,
-    name: s.name
-  }));
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -161,14 +188,14 @@ export default function ImportModal({ isOpen, onClose, subjects, students, avail
       />
 
       {/* Modal Content */}
-      <div className="relative bg-background w-full max-w-xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.30)] overflow-hidden flex flex-col border border-border/50 animate-in fade-in zoom-in duration-200 m-4">
+      <div className="relative bg-background w-full max-w-2xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.30)] overflow-hidden flex flex-col border border-border/50 animate-in fade-in zoom-in duration-200 m-4">
         <div className="p-6 border-b border-border/50 flex items-center justify-between bg-muted/20">
           <div>
             <h3 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
               <FileSpreadsheet className="w-6 h-6 text-emerald-500" />
-              Import Nilai Dinamis
+              Import Nilai Dinamis (Multi Mata Pelajaran)
             </h3>
-            <p className="text-xs text-muted-foreground mt-0.5">Unggah berkas rekap nilai format matriks horizontal Excel.</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Satu file Excel untuk banyak siswa dan banyak mata pelajaran.</p>
           </div>
           <button 
             type="button"
@@ -182,19 +209,6 @@ export default function ImportModal({ isOpen, onClose, subjects, students, avail
         <form onSubmit={handleSubmit} className="flex flex-col">
           <div className="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
             
-            {/* Subject Select */}
-            <div>
-              <label className="block text-sm font-semibold text-foreground mb-1.5">Mata Pelajaran</label>
-              <SearchableSelect
-                options={subjectOptions}
-                value={data.subject_id}
-                onChange={(val) => setData('subject_id', val as string)}
-                placeholder="Pilih mata pelajaran untuk diimpor..."
-                error={!!errors.subject_id}
-              />
-              {errors.subject_id && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.subject_id}</p>}
-            </div>
-
             {/* Semester & Academic Year */}
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -237,56 +251,85 @@ export default function ImportModal({ isOpen, onClose, subjects, students, avail
               </div>
             </div>
 
-            {/* Student Checkbox List */}
-            <div className="space-y-2 border-t border-border/30 pt-4">
-              <div className="flex items-center justify-between">
-                <label className="block text-sm font-semibold text-foreground">Daftar Siswa untuk Template ({selectedStudentIds.length} terpilih)</label>
-                <button
-                  type="button"
-                  onClick={toggleSelectAll}
-                  className="text-xs text-indigo-600 dark:text-indigo-400 font-bold hover:underline"
-                >
-                  {filteredStudents.every(s => selectedStudentIds.includes(s.id)) ? 'Deselect All' : 'Select All'}
-                </button>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Classes Checkbox List */}
+              <div className="space-y-2 border border-border/30 rounded-xl p-3 bg-muted/5">
+                <div className="flex items-center justify-between">
+                  <label className="block text-sm font-semibold text-foreground">Pilih Kelas ({selectedClassIds.length} terpilih)</label>
+                  <button
+                    type="button"
+                    onClick={toggleSelectAllClasses}
+                    className="text-xs text-indigo-600 dark:text-indigo-400 font-bold hover:underline"
+                  >
+                    {filteredClasses.every(c => selectedClassIds.includes(c.id)) ? 'Deselect All' : 'Select All'}
+                  </button>
+                </div>
 
-              {/* Search Bar for Students */}
-              <div className="relative group">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="Cari siswa..."
-                  value={searchStudentQuery}
-                  onChange={e => setSearchStudentQuery(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 bg-background hover:bg-muted/50 border border-border/50 rounded-xl text-foreground text-xs focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 outline-none transition-all"
-                />
-              </div>
+                <div className="relative group">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                  <input
+                    type="text"
+                    placeholder="Cari kelas..."
+                    value={searchClassQuery}
+                    onChange={e => setSearchClassQuery(e.target.value)}
+                    className="w-full pl-9 pr-4 py-1.5 bg-background hover:bg-muted/50 border border-border/50 rounded-lg text-foreground text-xs focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 outline-none transition-all"
+                  />
+                </div>
 
-              {/* Scrollable Checkbox Container */}
-              <div className="max-h-40 overflow-y-auto border border-border/50 rounded-xl p-3 bg-muted/10 space-y-1 divide-y divide-border/30">
-                {filteredStudents.map(student => {
-                  const isChecked = selectedStudentIds.includes(student.id);
-                  return (
-                    <label 
-                      key={student.id} 
-                      className="flex items-center gap-3 py-1.5 cursor-pointer hover:bg-muted/30 px-2 rounded-lg transition-colors"
-                    >
+                <div className="max-h-32 overflow-y-auto border border-border/50 rounded-lg p-2 bg-muted/10 space-y-1 divide-y divide-border/30">
+                  {filteredClasses.map(cls => (
+                    <label key={cls.id} className="flex items-center gap-3 py-1.5 cursor-pointer hover:bg-muted/30 px-2 rounded-lg transition-colors">
                       <input
                         type="checkbox"
-                        checked={isChecked}
-                        onChange={() => toggleStudent(student.id)}
+                        checked={selectedClassIds.includes(cls.id)}
+                        onChange={() => toggleClass(cls.id)}
                         className="rounded border-border/70 text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer"
                       />
-                      <div className="flex flex-col">
-                        <span className="text-xs font-semibold text-foreground">{student.name}</span>
-                        <span className="text-[10px] font-mono text-muted-foreground">NIS: {student.nis}</span>
-                      </div>
+                      <span className="text-xs font-semibold text-foreground">{cls.name}</span>
                     </label>
-                  );
-                })}
-                {filteredStudents.length === 0 && (
-                  <p className="text-xs text-muted-foreground text-center py-4">Siswa tidak ditemukan.</p>
-                )}
+                  ))}
+                  {filteredClasses.length === 0 && <p className="text-xs text-muted-foreground text-center py-4">Kelas tidak ditemukan.</p>}
+                </div>
+              </div>
+
+              {/* Subjects Checkbox List */}
+              <div className="space-y-2 border border-border/30 rounded-xl p-3 bg-muted/5">
+                <div className="flex items-center justify-between">
+                  <label className="block text-sm font-semibold text-foreground">Mata Pelajaran ({selectedSubjectIds.length} terpilih)</label>
+                  <button
+                    type="button"
+                    onClick={toggleSelectAllSubjects}
+                    className="text-xs text-indigo-600 dark:text-indigo-400 font-bold hover:underline"
+                  >
+                    {filteredSubjects.every(s => selectedSubjectIds.includes(s.id)) ? 'Deselect All' : 'Select All'}
+                  </button>
+                </div>
+
+                <div className="relative group">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                  <input
+                    type="text"
+                    placeholder="Cari mapel..."
+                    value={searchSubjectQuery}
+                    onChange={e => setSearchSubjectQuery(e.target.value)}
+                    className="w-full pl-9 pr-4 py-1.5 bg-background hover:bg-muted/50 border border-border/50 rounded-lg text-foreground text-xs focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 outline-none transition-all"
+                  />
+                </div>
+
+                <div className="max-h-32 overflow-y-auto border border-border/50 rounded-lg p-2 bg-muted/10 space-y-1 divide-y divide-border/30">
+                  {filteredSubjects.map(subject => (
+                    <label key={subject.id} className="flex items-center gap-3 py-1.5 cursor-pointer hover:bg-muted/30 px-2 rounded-lg transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={selectedSubjectIds.includes(subject.id)}
+                        onChange={() => toggleSubject(subject.id)}
+                        className="rounded border-border/70 text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer"
+                      />
+                      <span className="text-xs font-semibold text-foreground">{subject.name}</span>
+                    </label>
+                  ))}
+                  {filteredSubjects.length === 0 && <p className="text-xs text-muted-foreground text-center py-4">Mapel tidak ditemukan.</p>}
+                </div>
               </div>
             </div>
 
@@ -352,20 +395,13 @@ export default function ImportModal({ isOpen, onClose, subjects, students, avail
             <div className="p-4 bg-muted/40 border border-border/50 rounded-2xl text-xs space-y-2">
               <p className="font-bold text-foreground flex items-center gap-1.5">
                 <AlertCircle className="w-4 h-4 text-indigo-500" />
-                Ketentuan Format Excel Vertikal:
+                Ketentuan Format Excel Baru (Multi Sheet):
               </p>
               <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
-                <li>Baris 1-5 berisi deskripsi/metadata.</li>
-                <li>Baris 6 wajib berupa <strong>Sub-Header</strong> kolom tepat 6 kolom:
-                  <span className="text-indigo-600 dark:text-indigo-400 font-semibold"> ID Siswa (A)</span>, 
-                  <span className="text-indigo-600 dark:text-indigo-400 font-semibold"> NIS (B)</span>, 
-                  <span className="text-indigo-600 dark:text-indigo-400 font-semibold"> Nama Siswa (C)</span>, 
-                  <span className="text-indigo-600 dark:text-indigo-400 font-semibold"> Kategori (D)</span>, 
-                  <span className="text-indigo-600 dark:text-indigo-400 font-semibold"> Nama / Judul (E)</span>, dan 
-                  <span className="text-indigo-600 dark:text-indigo-400 font-semibold"> Nilai (F)</span>.
-                </li>
-                <li>Baris 7 dan seterusnya adalah data nilai siswa ke bawah (vertikal).</li>
-                <li>Setiap baris mewakili 1 entri nilai siswa. Guru dapat menduplikasi baris siswa ke bawah untuk menambah kategori penilaian yang berbeda.</li>
+                <li>Satu file berisi <strong>banyak sheet (worksheet)</strong>. 1 Sheet = 1 Siswa.</li>
+                <li>Baris 1-5 berisi deskripsi/metadata (<strong>Jangan ubah ID Siswa di baris 3!</strong>).</li>
+                <li>Baris 6 adalah Sub-Header: <span className="text-indigo-600 dark:text-indigo-400 font-semibold">ID Mapel (A)</span>, <span className="text-indigo-600 dark:text-indigo-400 font-semibold">Mata Pelajaran (B)</span>, <span className="text-indigo-600 dark:text-indigo-400 font-semibold">Kategori (C)</span>, <span className="text-indigo-600 dark:text-indigo-400 font-semibold">Nama / Judul (D)</span>, <span className="text-indigo-600 dark:text-indigo-400 font-semibold">Nilai (E)</span>.</li>
+                <li>Setiap baris di bawahnya (mulai baris 7) adalah data nilai siswa untuk mapel tersebut.</li>
               </ul>
             </div>
 
