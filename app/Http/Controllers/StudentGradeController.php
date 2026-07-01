@@ -168,18 +168,43 @@ class StudentGradeController extends Controller
 
     public function downloadTemplate(Request $request)
     {
+        ini_set('memory_limit', '-1');
+        set_time_limit(300);
+
         $request->validate([
             'subject_ids' => 'required|string',
             'class_ids' => 'required|string',
-            'semester' => 'required|string|in:Ganjil,Genap',
             'academic_year' => 'required|string',
         ]);
 
         $subjectIds = explode(',', $request->input('subject_ids'));
         $classIds = explode(',', $request->input('class_ids'));
         
-        $subjects = Subject::whereIn('id', $subjectIds)->orderBy('name')->get();
-        $semester = $request->input('semester');
+        $subjects = Subject::whereIn('id', $subjectIds)->get();
+
+        $customOrder = [
+            'Agama',
+            'PKN',
+            'B.INDONESIA',
+            'MATEMATIKA',
+            'SENBUD & KET',
+            'PENJASKES',
+            'B.INGGRIS',
+            'T.INFOKOM',
+            'Tahfiz',
+            'Tahsin',
+            'Murajaah',
+            "Al Qur'an Hadist",
+            'Fiqih',
+            'Akidah Akhlak',
+            'Sejarah Kebudayaan Islam',
+        ];
+
+        $subjects = $subjects->sortBy(function ($subject) use ($customOrder) {
+            $position = array_search($subject->name, $customOrder);
+            return $position === false ? 999 : $position;
+        });
+
         $academicYear = $request->input('academic_year');
 
         // Fetch students who belong to selected classes
@@ -219,9 +244,10 @@ class StudentGradeController extends Controller
         ];
 
         $defaultAssessments = [
-            ['category' => 'Tugas', 'title' => 'Tugas 1'],
             ['category' => 'UTS', 'title' => 'UTS Semester'],
-            ['category' => 'UAS', 'title' => 'UAS Semester']
+            ['category' => 'UAS', 'title' => 'UAS Semester'],
+            ['category' => 'GANJIL ', 'title' => 'Semester Ganjil'],
+            ['category' => 'GENAP ', 'title' => 'Semester Genap']
         ];
 
         foreach ($students as $student) {
@@ -235,7 +261,7 @@ class StudentGradeController extends Controller
             $sheet->setCellValue('A1', 'SISTEM INFORMASI AKADEMIK (SIAKAD) SD HARAPAN');
             $sheet->setCellValue('A2', 'Nama Siswa: ' . $student->name . ' (' . $student->nis . ')');
             $sheet->setCellValue('A3', 'ID Siswa: ' . $student->id);
-            $sheet->setCellValue('A4', 'Semester: ' . $semester . ' | Tahun Ajaran: ' . $academicYear);
+            $sheet->setCellValue('A4', 'Tahun Ajaran: ' . $academicYear);
             $sheet->setCellValue('A5', 'Petunjuk: Isi nilai pada kolom E (Nilai). Tambah baris baru jika perlu, tapi jangan ubah/hapus ID Siswa dan ID Mapel.');
 
             // Merge metadata headers
@@ -285,22 +311,20 @@ class StudentGradeController extends Controller
 
         $spreadsheet->setActiveSheetIndex(0);
 
-        // Clean output buffers to prevent corrupt files
-        if (ob_get_length()) ob_end_clean();
-
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
 
-        return response()->stream(
-            function () use ($writer) {
-                $writer->save('php://output');
-            },
-            200,
+        // Save to a temp file and return as download (more reliable than stream)
+        $tempFile = tempnam(sys_get_temp_dir(), 'nilai_template_') . '.xlsx';
+        $writer->save($tempFile);
+
+        return response()->download(
+            $tempFile,
+            'template-import-nilai-multi.xlsx',
             [
                 'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                'Content-Disposition' => 'attachment; filename="template-import-nilai-multi.xlsx"',
                 'Cache-Control' => 'max-age=0',
             ]
-        );
+        )->deleteFileAfterSend(true);
     }
 
     public function downloadReport(Request $request)

@@ -79,7 +79,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \App\Http\Controllers\StudentGradeController::downloadReport
- * @see app/Http/Controllers/StudentGradeController.php:306
+ * @see app/Http/Controllers/StudentGradeController.php:330
  * @route '/data-nilai-siswa/download-report'
  */
 export const downloadReport = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -94,7 +94,7 @@ downloadReport.definition = {
 
 /**
 * @see \App\Http\Controllers\StudentGradeController::downloadReport
- * @see app/Http/Controllers/StudentGradeController.php:306
+ * @see app/Http/Controllers/StudentGradeController.php:330
  * @route '/data-nilai-siswa/download-report'
  */
 downloadReport.url = (options?: RouteQueryOptions) => {
@@ -103,7 +103,7 @@ downloadReport.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\StudentGradeController::downloadReport
- * @see app/Http/Controllers/StudentGradeController.php:306
+ * @see app/Http/Controllers/StudentGradeController.php:330
  * @route '/data-nilai-siswa/download-report'
  */
 downloadReport.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -112,7 +112,7 @@ downloadReport.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\StudentGradeController::downloadReport
- * @see app/Http/Controllers/StudentGradeController.php:306
+ * @see app/Http/Controllers/StudentGradeController.php:330
  * @route '/data-nilai-siswa/download-report'
  */
 downloadReport.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -122,7 +122,7 @@ downloadReport.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => 
 
     /**
 * @see \App\Http\Controllers\StudentGradeController::downloadReport
- * @see app/Http/Controllers/StudentGradeController.php:306
+ * @see app/Http/Controllers/StudentGradeController.php:330
  * @route '/data-nilai-siswa/download-report'
  */
     const downloadReportForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -132,7 +132,7 @@ downloadReport.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => 
 
             /**
 * @see \App\Http\Controllers\StudentGradeController::downloadReport
- * @see app/Http/Controllers/StudentGradeController.php:306
+ * @see app/Http/Controllers/StudentGradeController.php:330
  * @route '/data-nilai-siswa/download-report'
  */
         downloadReportForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -141,7 +141,7 @@ downloadReport.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => 
         })
             /**
 * @see \App\Http\Controllers\StudentGradeController::downloadReport
- * @see app/Http/Controllers/StudentGradeController.php:306
+ * @see app/Http/Controllers/StudentGradeController.php:330
  * @route '/data-nilai-siswa/download-report'
  */
         downloadReportForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

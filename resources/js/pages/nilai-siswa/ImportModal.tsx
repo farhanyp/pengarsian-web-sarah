@@ -18,9 +18,9 @@ export default function ImportModal({ isOpen, onClose, subjects, classes, availa
   const [dragActive, setDragActive] = useState(false);
 
   const { data, setData, post, processing, errors, reset } = useForm({
-    semester: 'Ganjil',
     academic_year: availableAcademicYears[0]?.id || '2025/2026',
     file: null as File | null,
+    semester: 'Ganjil', // Defaulting since it might still be needed by the backend for now
   });
 
   const [selectedSubjectIds, setSelectedSubjectIds] = useState<string[]>([]);
@@ -38,16 +38,16 @@ export default function ImportModal({ isOpen, onClose, subjects, classes, availa
     }
   }, [isOpen, subjects, classes]);
 
-  const filteredSubjects = subjects.filter(s => 
+  const filteredSubjects = subjects.filter(s =>
     s.name.toLowerCase().includes(searchSubjectQuery.toLowerCase())
   );
 
-  const filteredClasses = classes.filter(c => 
+  const filteredClasses = classes.filter(c =>
     c.name.toLowerCase().includes(searchClassQuery.toLowerCase())
   );
 
   const toggleSubject = (id: string) => {
-    setSelectedSubjectIds(prev => 
+    setSelectedSubjectIds(prev =>
       prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
     );
   };
@@ -55,7 +55,7 @@ export default function ImportModal({ isOpen, onClose, subjects, classes, availa
   const toggleSelectAllSubjects = () => {
     const allFilteredIds = filteredSubjects.map(s => s.id);
     const areAllFilteredSelected = allFilteredIds.every(id => selectedSubjectIds.includes(id));
-    
+
     if (areAllFilteredSelected) {
       setSelectedSubjectIds(prev => prev.filter(id => !allFilteredIds.includes(id)));
     } else {
@@ -72,7 +72,7 @@ export default function ImportModal({ isOpen, onClose, subjects, classes, availa
   };
 
   const toggleClass = (id: number) => {
-    setSelectedClassIds(prev => 
+    setSelectedClassIds(prev =>
       prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
     );
   };
@@ -80,7 +80,7 @@ export default function ImportModal({ isOpen, onClose, subjects, classes, availa
   const toggleSelectAllClasses = () => {
     const allFilteredIds = filteredClasses.map(c => c.id);
     const areAllFilteredSelected = allFilteredIds.every(id => selectedClassIds.includes(id));
-    
+
     if (areAllFilteredSelected) {
       setSelectedClassIds(prev => prev.filter(id => !allFilteredIds.includes(id)));
     } else {
@@ -107,7 +107,7 @@ export default function ImportModal({ isOpen, onClose, subjects, classes, availa
     }
     const subjectIdsParam = selectedSubjectIds.join(',');
     const classIdsParam = selectedClassIds.join(',');
-    const url = `/data-nilai-siswa/template?semester=${data.semester}&academic_year=${data.academic_year}&subject_ids=${subjectIdsParam}&class_ids=${classIdsParam}`;
+    const url = `/data-nilai-siswa/template?academic_year=${encodeURIComponent(data.academic_year)}&subject_ids=${subjectIdsParam}&class_ids=${classIdsParam}`;
     window.open(url, '_blank');
   };
 
@@ -182,7 +182,7 @@ export default function ImportModal({ isOpen, onClose, subjects, classes, availa
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center">
       {/* Backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
@@ -197,7 +197,7 @@ export default function ImportModal({ isOpen, onClose, subjects, classes, availa
             </h3>
             <p className="text-xs text-muted-foreground mt-0.5">Satu file Excel untuk banyak siswa dan banyak mata pelajaran.</p>
           </div>
-          <button 
+          <button
             type="button"
             onClick={onClose}
             className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full transition-colors"
@@ -208,38 +208,19 @@ export default function ImportModal({ isOpen, onClose, subjects, classes, availa
 
         <form onSubmit={handleSubmit} className="flex flex-col">
           <div className="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
-            
-            {/* Semester & Academic Year */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-foreground mb-1.5">Semester</label>
-                <select
-                  value={data.semester}
-                  onChange={e => setData('semester', e.target.value)}
-                  className={`w-full px-4 py-2.5 bg-background hover:bg-muted/50 border rounded-xl text-sm text-foreground outline-none transition-all ${
-                    errors.semester 
-                      ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
-                      : 'border-border/50 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50'
-                  }`}
-                  disabled={processing}
-                  required
-                >
-                  <option value="Ganjil">Ganjil</option>
-                  <option value="Genap">Genap</option>
-                </select>
-                {errors.semester && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.semester}</p>}
-              </div>
+
+            {/* Academic Year */}
+            <div className="grid grid-cols-1 gap-4">
 
               <div>
                 <label className="block text-sm font-semibold text-foreground mb-1.5">Tahun Ajaran</label>
                 <select
                   value={data.academic_year}
                   onChange={e => setData('academic_year', e.target.value)}
-                  className={`w-full px-4 py-2.5 bg-background hover:bg-muted/50 border rounded-xl text-sm text-foreground outline-none transition-all ${
-                    errors.academic_year 
-                      ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
+                  className={`w-full px-4 py-2.5 bg-background hover:bg-muted/50 border rounded-xl text-sm text-foreground outline-none transition-all ${errors.academic_year
+                      ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
                       : 'border-border/50 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50'
-                  }`}
+                    }`}
                   disabled={processing}
                   required
                 >
@@ -336,8 +317,8 @@ export default function ImportModal({ isOpen, onClose, subjects, classes, availa
             {/* Dropzone File Upload */}
             <div>
               <label className="block text-sm font-semibold text-foreground mb-1.5">Berkas Excel (.xlsx / .xls)</label>
-              
-              <input 
+
+              <input
                 type="file"
                 ref={fileInputRef}
                 onChange={handleFileChange}
@@ -352,11 +333,10 @@ export default function ImportModal({ isOpen, onClose, subjects, classes, availa
                   onDragLeave={handleDrag}
                   onDrop={handleDrop}
                   onClick={triggerFileInput}
-                  className={`border-2 border-dashed rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 ${
-                    dragActive 
-                      ? 'border-indigo-500 bg-indigo-500/5' 
+                  className={`border-2 border-dashed rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 ${dragActive
+                      ? 'border-indigo-500 bg-indigo-500/5'
                       : 'border-border hover:border-indigo-500/50 hover:bg-muted/30'
-                  }`}
+                    }`}
                 >
                   <Upload className="w-10 h-10 text-muted-foreground mb-3 animate-pulse" />
                   <p className="text-sm font-bold text-foreground">Klik untuk unggah atau seret file ke sini</p>
