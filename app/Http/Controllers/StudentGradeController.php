@@ -28,7 +28,7 @@ class StudentGradeController extends Controller
         $user = Auth::user();
         $isWaliKelas = $user && $user->hasRole('WALI_KELAS');
         
-        $grades = StudentGrade::with(['student', 'subject', 'category'])
+        $baseQuery = StudentGrade::query()
             ->when($isWaliKelas, function ($query) use ($user) {
                 $query->whereHas('student.classes', function ($q) use ($user) {
                     $q->whereIn('classes.id', function($subQuery) use ($user) {
@@ -62,10 +62,30 @@ class StudentGradeController extends Controller
                         $sq->where('class_student.academic_year', $filterAy);
                     }
                 });
-            })
-            ->latest()
+            });
+
+        $paginatedStudentIds = (clone $baseQuery)
+            ->select('student_id')
+            ->distinct()
             ->paginate(20)
             ->withQueryString();
+
+        $gradesList = (clone $baseQuery)
+            ->with(['student', 'subject', 'category'])
+            ->whereIn('student_id', $paginatedStudentIds->pluck('student_id'))
+            ->latest()
+            ->get();
+
+        $grades = new \Illuminate\Pagination\LengthAwarePaginator(
+            $gradesList,
+            $paginatedStudentIds->total(),
+            $paginatedStudentIds->perPage(),
+            $paginatedStudentIds->currentPage(),
+            [
+                'path' => \Illuminate\Pagination\Paginator::resolveCurrentPath(),
+                'query' => $request->query(),
+            ]
+        );
 
         $availableAcademicYears = AcademicYear::orderByDesc('year')->get()->map(function($ay) {
             return [

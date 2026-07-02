@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('grade_categories', function (Blueprint $table) {
             $table->id(); // bigserial PK
             $table->string('name')->comment('Contoh: Tugas, Kuis, Latihan, UTS, UAS');
-            $table->float('default_weight')->comment('Bobot default, misal Tugas = 0.20 (20%), UTS = 0.30 (30%)');
             $table->timestamps();
         });
     }
