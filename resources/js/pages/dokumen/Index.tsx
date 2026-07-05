@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Search, Plus, Edit2, Trash2, FileText, FileSpreadsheet, Image as ImageIcon, File, Download } from 'lucide-react';
+import { Search, Plus, Edit2, Trash2, FileText, FileSpreadsheet, Image as ImageIcon, File, Download, Eye } from 'lucide-react';
 import { CreateModal } from './CreateModal';
 import { EditModal } from './EditModal';
 import { DeleteModal } from './DeleteModal';
@@ -157,9 +157,17 @@ export default function DokumenPage({ documents, filters }: Props) {
                       <td className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                           <a
-                            href={doc.current_url}
+                            href={`/storage/${doc.current_url}`}
                             target="_blank"
                             rel="noreferrer"
+                            className="p-2 hover:bg-blue-500/10 text-blue-600 rounded-lg transition-all"
+                            title="Lihat"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </a>
+                          <a
+                            href={`/storage/${doc.current_url}`}
+                            download
                             className="p-2 hover:bg-emerald-500/10 text-emerald-600 rounded-lg transition-all"
                             title="Unduh"
                           >

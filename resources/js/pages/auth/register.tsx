@@ -102,7 +102,7 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-1.5 md:space-y-2">
-                <label className="text-[10px] md:font-label-md md:text-label-md text-muted-foreground uppercase tracking-wider font-semibold" htmlFor="confirm_password">Konfirmasi</label>
+                <label className="text-[10px] md:font-label-md md:text-label-md text-muted-foreground uppercase tracking-wider font-semibold" htmlFor="confirm_password">Konfirmasi Kata Sandi</label>
                 <div className="relative group">
                   <ShieldCheck className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5 transition-colors group-focus-within:text-primary" />
                   <input

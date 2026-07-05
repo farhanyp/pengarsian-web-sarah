@@ -66,7 +66,7 @@ export default function LoginPage() {
               <div className="space-y-1.5 md:space-y-2">
                 <div className="flex justify-between items-end px-1">
                   <label className="text-[10px] md:font-label-md md:text-label-md text-muted-foreground font-semibold" htmlFor="password">KATA SANDI</label>
-                  <Link className="text-[10px] md:font-label-md md:text-label-md text-primary hover:text-primary/80 transition-colors font-semibold" href="/forgot-password">LUPA?</Link>
+                  <Link className="text-[10px] md:font-label-md md:text-label-md text-primary hover:text-primary/80 transition-colors font-semibold" href="/forgot-password">LUPA KATA SANDI?</Link>
                 </div>
                 <div className="relative group input-glow rounded-lg overflow-hidden transition-all duration-300">
                   <Lock className="absolute left-3 md:left-base top-1/2 -translate-y-1/2 text-outline w-[18px] h-[18px] md:w-[24px] md:h-[24px]" />

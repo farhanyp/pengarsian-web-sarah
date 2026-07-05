@@ -16,7 +16,7 @@ class SchoolClassController extends Controller
             ->when($search, function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%");
             })
-            ->latest()
+            ->orderBy('name', 'asc')
             ->paginate(20)
             ->withQueryString();
 
