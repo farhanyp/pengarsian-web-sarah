@@ -2,14 +2,29 @@ version: '3.8'
 
 services:
     db:
-        image: postgres:18
+        image: mysql:8.0
         container_name: arsip-sd-harapan-db
         restart: always
         environment:
-            POSTGRES_USER: ${DB_USERNAME:-postgres}
-            POSTGRES_PASSWORD: ${DB_PASSWORD:-root}
-            POSTGRES_DB: ${DB_DATABASE:-arsip_smk_mandiri_app_develop}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+            MYSQL_USER: ${DB_USERNAME:-mysqluser}
+            MYSQL_PASSWORD: ${DB_PASSWORD:-root}
+            MYSQL_DATABASE: ${DB_DATABASE:-arsip_smk_mandiri_app_develop}
         ports:
-            - '5432:5432'
+            - '3306:3306'
         volumes:
-            - 'D:/program/docker/postgres-data:/var/lib/postgresql'
+            - 'D:/program/docker/mysql-data:/var/lib/mysql'
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: arsip-sd-harapan-pma
+        restart: always
+        environment:
+            PMA_HOST: db
+            PMA_PORT: 3306
+            PMA_USER: root
+            PMA_PASSWORD: ${DB_PASSWORD:-root}
+        ports:
+            - '8080:80'
+        depends_on:
+            - db

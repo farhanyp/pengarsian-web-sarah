@@ -3,8 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 return new class extends Migration
 {
@@ -13,30 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $tableName = 'students';
+        Schema::create('students', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('nis')->unique();
+            $table->string('nisn')->unique();
+            $table->string('name');
+            $table->enum('jenis_kelamin', ['PRIA', 'WANITA']);
+            $table->timestamps();
 
-        DB::beginTransaction();
-        try {
-            Schema::create($tableName, function (Blueprint $table) {
-                $table->uuid('id')->primary();
-                $table->string('nis')->unique();
-                $table->string('nisn')->unique();
-                $table->string('name');
-                $table->enum('jenis_kelamin', ['PRIA', 'WANITA']);
-                $table->timestamps();
-
-                // Indexes specified in the ERD
-                $table->index('nis');
-                $table->index('nisn');
-                $table->index('name');
-            });
-
-            DB::commit();
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            Log::error("Migration up failed for table [{$tableName}]: " . $e->getMessage());
-            throw new \RuntimeException("Failed to create the [{$tableName}] table. Error: " . $e->getMessage(), 0, $e);
-        }
+            // Notes: Kolom dengan ->unique() sudah otomatis memiliki index di MySQL, 
+            // Jadi $table->index('nis') dan 'nisn' sebenarnya opsional/redundan.
+            $table->index('name');
+        });
     }
 
     /**
@@ -44,16 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        $tableName = 'students';
-
-        DB::beginTransaction();
-        try {
-            Schema::dropIfExists($tableName);
-            DB::commit();
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            Log::error("Migration down failed for table [{$tableName}]: " . $e->getMessage());
-            throw new \RuntimeException("Failed to drop the [{$tableName}] table. Error: " . $e->getMessage(), 0, $e);
-        }
+        Schema::dropIfExists('students');
     }
 };
