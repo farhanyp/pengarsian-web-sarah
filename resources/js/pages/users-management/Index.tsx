@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Search, ShieldAlert, Edit2, ShieldCheck, Mail, User as UserIcon } from 'lucide-react';
 import EditRoleModal from './EditRoleModal';
@@ -130,7 +130,7 @@ export default function UsersManagementPage({ users, filters }: Props) {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => setEditingUser(user)}
                             className="flex items-center gap-2 px-3 py-2 hover:bg-indigo-500/10 text-indigo-600 rounded-lg transition-all text-sm font-semibold"

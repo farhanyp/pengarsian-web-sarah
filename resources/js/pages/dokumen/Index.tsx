@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Search, Plus, Edit2, Trash2, FileText, FileSpreadsheet, Image as ImageIcon, File, Download, Eye } from 'lucide-react';
 import { CreateModal } from './CreateModal';
@@ -155,7 +155,7 @@ export default function DokumenPage({ documents, filters }: Props) {
                     </td>
                     {canEdit && (
                       <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center justify-end gap-1">
                           <a
                             href={`/storage/${doc.current_url}`}
                             target="_blank"

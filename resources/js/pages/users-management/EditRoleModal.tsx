@@ -14,6 +14,7 @@ interface Props {
 const ROLES = [
   { value: 'SUPERADMIN', label: 'Super Administrator', icon: ShieldAlert, color: 'text-red-500' },
   { value: 'ADMIN', label: 'Administrator', icon: ShieldCheck, color: 'text-orange-500' },
+  { value: 'WALI_KELAS', label: 'Wali Kelas', icon: UserIcon, color: 'text-yellow-500' },
   { value: 'GURU', label: 'Guru', icon: UserIcon, color: 'text-blue-500' },
   { value: 'KEPALA_SEKOLAH', label: 'Kepala Sekolah', icon: UserIcon, color: 'text-green-500' }
 ];

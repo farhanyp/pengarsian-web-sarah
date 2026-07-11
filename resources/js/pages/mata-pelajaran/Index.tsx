@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import { Search, Plus, Edit2, Trash2, Download } from 'lucide-react';
 import CreateModal from './CreateModal';
@@ -101,7 +101,7 @@ export default function MataPelajaranPage({ subjects, filters }: Props) {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center justify-end gap-1">
                         <button
                           onClick={() => setEditingSubject(item)}
                           className="p-2 hover:bg-indigo-500/10 text-indigo-600 rounded-lg transition-all"

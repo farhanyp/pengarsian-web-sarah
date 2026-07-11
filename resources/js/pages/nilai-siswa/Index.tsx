@@ -1,4 +1,4 @@
-import { useState, useMemo, Fragment, useEffect, useRef } from 'react';
+﻿import { useState, useMemo, Fragment, useEffect, useRef } from 'react';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Search, Filter, Plus, Edit2, Trash2, Download, TrendingUp, Trophy, AlertCircle, CheckCircle2, FileSpreadsheet, ChevronDown, ChevronUp, Inbox } from 'lucide-react';
 import CreateModal from './CreateModal';
@@ -323,7 +323,7 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, classes
                                           </td>
                                           {canEdit && (
                                             <td className="px-4 py-3 text-right">
-                                              <div className="flex items-center justify-end gap-1 opacity-0 group-hover/row:opacity-100 transition-opacity">
+                                              <div className="flex items-center justify-end gap-1">
                                                 <button
                                                   onClick={(e) => { e.stopPropagation(); setEditingGrade(grade); }}
                                                   className="p-1.5 hover:bg-indigo-500/10 text-indigo-600 rounded-lg transition-all"
