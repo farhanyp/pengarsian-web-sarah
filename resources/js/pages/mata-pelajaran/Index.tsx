@@ -35,10 +35,10 @@ export default function MataPelajaranPage({ subjects, filters }: Props) {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
-              Manajemen Data Mata Pelajaran
+              Master Data Mata Pelajaran
             </h2>
             <p className="text-sm md:text-base text-muted-foreground mt-1 font-medium">
-              Kelola dan pantau data mata pelajaran secara terpusat.
+              Data mata pelajaran.
             </p>
           </div>
         </div>
