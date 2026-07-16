@@ -31,7 +31,7 @@ interface Props {
 
 export default function DataSiswaPage({ students, availableClasses, availableAcademicYears, filters }: Props) {
   const { auth } = usePage<any>().props;
-  const canEdit = auth?.user?.role === 'SUPERADMIN' || auth?.user?.role === 'ADMIN';
+  const canEdit = auth?.user?.role === 'SUPERADMIN' || auth?.user?.role === 'ADMIN' || auth?.user?.role === 'WALI_KELAS' || auth?.user?.role === 'GURU';
 
   const [search, setSearch] = useState(filters.search || '');
   const [filterAy, setFilterAy] = useState(filters.filter_ay || 'all');
@@ -63,7 +63,7 @@ export default function DataSiswaPage({ students, availableClasses, availableAca
     const delayDebounceFn = setTimeout(() => {
       router.get(
         '/data-siswa',
-        { 
+        {
           search: search || undefined,
           filter_ay: filterAy !== 'all' ? filterAy : undefined,
           filter_class: filterClass !== 'all' ? filterClass : undefined,
@@ -93,7 +93,7 @@ export default function DataSiswaPage({ students, availableClasses, availableAca
           </div>
 
           <div className="flex items-center gap-2 mt-2 md:mt-0">
-            <button 
+            <button
               onClick={() => setIsDownloadModalOpen(true)}
               className="w-full md:w-auto justify-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center gap-2"
             >
@@ -129,10 +129,10 @@ export default function DataSiswaPage({ students, availableClasses, availableAca
 
             {/* Filters & Actions */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full xl:w-auto">
-              
+
               {/* Dropdowns Group */}
               <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto p-1 bg-background/50 border border-border/50 rounded-xl">
-                
+
                 {/* Academic Year Filter */}
                 <Select value={filterAy} onValueChange={setFilterAy}>
                   <SelectTrigger className="w-[140px] sm:w-[150px] bg-transparent border-0 shadow-none focus:ring-0">
@@ -287,7 +287,7 @@ export default function DataSiswaPage({ students, availableClasses, availableAca
                         <h3 className="text-lg font-semibold text-foreground mb-1">Data Tidak Ditemukan</h3>
                         <p className="text-sm">Tidak ada siswa yang sesuai dengan kriteria pencarian dan filter Anda.</p>
                         {(search || filterAy !== 'all' || filterClass !== 'all' || sortName !== 'none') && (
-                          <button 
+                          <button
                             onClick={() => {
                               setSearch('');
                               setFilterAy('all');
@@ -320,8 +320,8 @@ export default function DataSiswaPage({ students, availableClasses, availableAca
                       key={i}
                       href={link.url}
                       className={`px-3 py-1.5 text-sm rounded-lg transition-all ${link.active
-                          ? 'bg-indigo-600 text-white font-bold shadow-sm'
-                          : 'text-muted-foreground hover:text-indigo-600 hover:bg-indigo-500/10'
+                        ? 'bg-indigo-600 text-white font-bold shadow-sm'
+                        : 'text-muted-foreground hover:text-indigo-600 hover:bg-indigo-500/10'
                         }`}
                       dangerouslySetInnerHTML={{ __html: link.label }}
                     />

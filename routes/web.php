@@ -117,11 +117,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Hanya ADMIN dan SUPERADMIN yang bisa menambah, mengubah, dan menghapus (Write Access)
     Route::middleware(['role:ADMIN|SUPERADMIN'])->group(function () {
-        Route::get('/data-siswa/template', [StudentController::class, 'downloadTemplate'])->name('data-siswa.template');
-        Route::post('/data-siswa/import', [StudentController::class, 'importBatch'])->name('data-siswa.import');
-        Route::post('/data-siswa', [StudentController::class, 'store'])->name('data-siswa.store');
-        Route::put('/data-siswa/{student}', [StudentController::class, 'update'])->name('data-siswa.update');
-        Route::delete('/data-siswa/{student}', [StudentController::class, 'destroy'])->name('data-siswa.destroy');
 
         Route::post('/dokumen', [\App\Http\Controllers\DocumentController::class, 'store'])->name('dokumen.store');
         Route::put('/dokumen/{document}', [\App\Http\Controllers\DocumentController::class, 'update'])->name('dokumen.update');
@@ -140,8 +135,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/tahun-akademik/{tahun_akademik}', [\App\Http\Controllers\AcademicYearController::class, 'destroy'])->name('tahun-akademik.destroy');
     });
 
+    Route::middleware(['role:ADMIN|SUPERADMIN|GURU|WALI_KELAS'])->group(function () {
+        Route::get('/data-siswa/template', [StudentController::class, 'downloadTemplate'])->name('data-siswa.template');
+        Route::post('/data-siswa/import', [StudentController::class, 'importBatch'])->name('data-siswa.import');
+        Route::post('/data-siswa', [StudentController::class, 'store'])->name('data-siswa.store');
+        Route::put('/data-siswa/{student}', [StudentController::class, 'update'])->name('data-siswa.update');
+        Route::delete('/data-siswa/{student}', [StudentController::class, 'destroy'])->name('data-siswa.destroy');
+    });
+
     // Contoh: ADMIN, GURU, SUPERADMIN (fitur lain selain data-siswa, kelas, tahun akademik)
-    Route::middleware(['role:ADMIN|GURU|SUPERADMIN'])->group(function () {
+    Route::middleware(['role:ADMIN|GURU|SUPERADMIN|WALI_KELAS'])->group(function () {
 
         Route::get('/data-nilai-siswa/template', [\App\Http\Controllers\StudentGradeController::class, 'downloadTemplate'])->name('data-nilai-siswa.template');
         Route::post('/data-nilai-siswa', [\App\Http\Controllers\StudentGradeController::class, 'store'])->name('data-nilai-siswa.store');
@@ -157,7 +160,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     // Hanya SUPERADMIN yang bisa akses rute ini
-    Route::middleware(['role:SUPERADMIN'])->group(function () {
+    Route::middleware(['role:SUPERADMIN|KEPALA_SEKOLAH'])->group(function () {
         Route::get('/users', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
         Route::put('/users/{user}/role', [\App\Http\Controllers\UserController::class, 'updateRole'])->name('users.updateRole');
     });

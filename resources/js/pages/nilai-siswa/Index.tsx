@@ -33,7 +33,7 @@ interface Props {
 
 export default function DataNilaiSiswaPage({ grades, students, subjects, classes, gradeCategories, availableAcademicYears, filters }: Props) {
   const { auth } = usePage<any>().props;
-  const canEdit = ['SUPERADMIN', 'ADMIN', 'GURU'].includes(auth?.user?.role);
+  const canEdit = ['SUPERADMIN', 'ADMIN', 'GURU', "WALI_KELAS"].includes(auth?.user?.role);
 
   const [search, setSearch] = useState(filters.search || '');
   const [filterSemester, setFilterSemester] = useState(filters.filter_semester || 'all');
@@ -66,7 +66,7 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, classes
     const delayDebounceFn = setTimeout(() => {
       router.get(
         '/data-nilai-siswa',
-        { 
+        {
           search: search || undefined,
           filter_semester: filterSemester !== 'all' ? filterSemester : undefined,
           filter_ay: filterAy !== 'all' ? filterAy : undefined,
@@ -113,7 +113,7 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, classes
           </div>
 
           <div className="flex items-center gap-2 mt-2 md:mt-0">
-            <button 
+            <button
               onClick={() => setIsDownloadModalOpen(true)}
               className="w-full md:w-auto justify-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center gap-2"
             >
@@ -149,24 +149,24 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, classes
 
             {/* Filters & Actions */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full xl:w-auto">
-              
+
               <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-                
+
                 {/* Semester Filter */}
                 <div className="flex bg-background rounded-xl p-1 border border-border/50 transition-all w-full sm:w-auto">
-                  <button 
+                  <button
                     onClick={() => setFilterSemester('all')}
                     className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-sm font-bold transition-colors ${filterSemester === 'all' ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
                   >
                     Semua
                   </button>
-                  <button 
+                  <button
                     onClick={() => setFilterSemester('Ganjil')}
                     className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-sm font-bold transition-colors ${filterSemester === 'Ganjil' ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
                   >
                     Ganjil
                   </button>
-                  <button 
+                  <button
                     onClick={() => setFilterSemester('Genap')}
                     className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-sm font-bold transition-colors ${filterSemester === 'Genap' ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
                   >
@@ -254,10 +254,10 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, classes
                   const studentGrades = group.grades;
                   const isExpanded = expandedStudentId === student.id;
                   const initials = student?.name?.substring(0, 2).toUpperCase() || 'NA';
-                  
+
                   return (
                     <Fragment key={student.id}>
-                      <tr 
+                      <tr
                         className={`transition-colors group hover:bg-muted/30 cursor-pointer ${isExpanded ? 'bg-muted/30' : ''}`}
                         onClick={() => toggleExpand(student.id)}
                       >
@@ -284,7 +284,7 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, classes
                           </button>
                         </td>
                       </tr>
-                      
+
                       {isExpanded && (
                         <tr>
                           <td colSpan={4} className="p-0 border-b-0">
@@ -304,7 +304,7 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, classes
                                     {studentGrades.map(grade => {
                                       const score = grade.score ?? 0;
                                       const isRemedial = score < 70;
-                                      
+
                                       return (
                                         <tr key={grade.id} className={`transition-colors group/row ${isRemedial ? 'hover:bg-red-500/5 bg-red-500/5' : 'hover:bg-muted/20'}`}>
                                           <td className="px-4 py-3 text-sm font-semibold text-foreground">
@@ -364,7 +364,7 @@ export default function DataNilaiSiswaPage({ grades, students, subjects, classes
                         <h3 className="text-lg font-semibold text-foreground mb-1">Data Tidak Ditemukan</h3>
                         <p className="text-sm">Tidak ada nilai yang sesuai dengan kriteria pencarian dan filter Anda.</p>
                         {(search || filterSemester !== 'all' || filterAy !== 'all' || filterClass !== 'all') && (
-                          <button 
+                          <button
                             onClick={() => {
                               setSearch('');
                               setFilterSemester('all');

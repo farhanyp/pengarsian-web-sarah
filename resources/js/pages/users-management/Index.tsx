@@ -14,7 +14,7 @@ interface Props {
 
 export default function UsersManagementPage({ users, filters }: Props) {
   const { auth } = usePage<any>().props;
-  const isSuperadmin = auth?.user?.role === 'SUPERADMIN';
+  const isSuperadmin = auth?.user?.role === 'SUPERADMIN' || auth?.user?.role === 'KEPALA_SEKOLAH';
 
   const [search, setSearch] = useState(filters.search || '');
   const [editingUser, setEditingUser] = useState<UserData | null>(null);
