@@ -79,7 +79,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \App\Http\Controllers\UserController::updateRole
- * @see app/Http/Controllers/UserController.php:38
+ * @see app/Http/Controllers/UserController.php:45
  * @route '/users/{user}/role'
  */
 export const updateRole = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -94,7 +94,7 @@ updateRole.definition = {
 
 /**
 * @see \App\Http\Controllers\UserController::updateRole
- * @see app/Http/Controllers/UserController.php:38
+ * @see app/Http/Controllers/UserController.php:45
  * @route '/users/{user}/role'
  */
 updateRole.url = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -127,7 +127,7 @@ updateRole.url = (args: { user: string | { id: string } } | [user: string | { id
 
 /**
 * @see \App\Http\Controllers\UserController::updateRole
- * @see app/Http/Controllers/UserController.php:38
+ * @see app/Http/Controllers/UserController.php:45
  * @route '/users/{user}/role'
  */
 updateRole.put = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -137,7 +137,7 @@ updateRole.put = (args: { user: string | { id: string } } | [user: string | { id
 
     /**
 * @see \App\Http\Controllers\UserController::updateRole
- * @see app/Http/Controllers/UserController.php:38
+ * @see app/Http/Controllers/UserController.php:45
  * @route '/users/{user}/role'
  */
     const updateRoleForm = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -152,7 +152,7 @@ updateRole.put = (args: { user: string | { id: string } } | [user: string | { id
 
             /**
 * @see \App\Http\Controllers\UserController::updateRole
- * @see app/Http/Controllers/UserController.php:38
+ * @see app/Http/Controllers/UserController.php:45
  * @route '/users/{user}/role'
  */
         updateRoleForm.put = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

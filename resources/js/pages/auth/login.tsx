@@ -31,7 +31,7 @@ export default function LoginPage() {
           {/* Branding Section */}
           <div className="flex flex-col items-center mb-3 md:mb-lg">
             <div className="mb-1 md:mb-sm w-12 h-12 md:w-16 md:h-16 rounded-xl overflow-hidden shadow-md flex items-center justify-center">
-              <img src="/sd-it-harapan2.jpg" alt="Logo" className="w-full h-full object-cover" />
+              <img src="/sd-it-harapan2.png" alt="Logo" className="w-full h-full object-cover" />
             </div>
             <h1 className="text-xl md:font-headline-md md:text-headline-md text-foreground tracking-tight font-bold">SD Harapan 2 Tahfidz</h1>
             <p className="text-[10px] md:font-label-md md:text-label-md text-muted-foreground uppercase tracking-[0.2em]">Manajemen Pengarsipan</p>

@@ -16,8 +16,15 @@ class UserController extends Controller
         $users = User::query()
             ->with('roles')
             ->when($search, function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%")
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
                       ->orWhere('email', 'like', "%{$search}%");
+                });
+            })
+            ->when(! $request->user()->hasRole('SUPERADMIN'), function ($query) {
+                $query->whereDoesntHave('roles', function ($q) {
+                    $q->whereIn('name', ['Superadmin', 'SUPERADMIN', 'superadmin']);
+                });
             })
             ->latest()
             ->paginate(20)

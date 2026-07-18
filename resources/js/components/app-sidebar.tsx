@@ -87,14 +87,14 @@ export function AppSidebar({
             {/* ── Brand / Logo ─────────────────────────────────────────── */}
             <div className="p-4 flex items-center gap-3 overflow-hidden whitespace-nowrap h-[72px]">
                 <div className="w-10 h-10 shrink-0 rounded-xl overflow-hidden shadow-lg flex items-center justify-center transition-transform hover:scale-105">
-                    <img src="/sd-it-harapan2.jpg" alt="Logo" className="w-full h-full object-cover" />
+                    <img src="/sd-it-harapan2.png" alt="Logo" className="w-full h-full object-cover" />
                 </div>
 
                 <div
                     className={`transition-all duration-300 ${isCollapsed ? 'opacity-0 w-0 -translate-x-4' : 'opacity-100 translate-x-0'
                         }`}
                 >
-                    <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600 leading-tight">
+                    <h1 className="text-l font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600 leading-tight">
                         SD Harapan 2 Tahfidz
                     </h1>
                     <p className="text-[10px] text-muted-foreground font-semibold tracking-wider uppercase">

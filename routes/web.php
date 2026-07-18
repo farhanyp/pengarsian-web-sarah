@@ -4,11 +4,17 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use App\Http\Controllers\StudentController;
 
+Route::get('/', function () {
+    return inertia('welcome', [
+        'canRegister' => Features::enabled(Features::registration()),
+    ]);
+});
+
 Route::middleware(['auth', 'verified'])->group(function () {
     
     // Semua role (ADMIN, GURU, KEPALA_SEKOLAH, WALI_KELAS) bisa akses dashboard
     Route::middleware(['role:ADMIN|GURU|KEPALA_SEKOLAH|SUPERADMIN|WALI_KELAS'])->group(function () {
-        Route::get('/', function () {
+        Route::get('/dashboard', function () {
             $activeYear = \App\Models\AcademicYear::where('is_active', true)->first();
             $activeYearName = $activeYear ? $activeYear->year : null;
             
