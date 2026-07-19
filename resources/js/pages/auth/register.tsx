@@ -29,7 +29,7 @@ export default function RegisterPage() {
       <main className="w-full max-w-[480px] z-10 animate-in fade-in duration-700 slide-in-from-bottom-4">
         <div className="flex flex-col items-center mb-2 md:mb-lg">
           <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl overflow-hidden flex items-center justify-center mb-2 md:mb-base border border-outline-variant shadow-lg">
-            <img src="/sd-it-harapan2.jpg" alt="Logo" className="w-full h-full object-cover" />
+            <img src="/sd-it-harapan2.png" alt="Logo" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-xl md:font-headline-md md:text-headline-md text-foreground tracking-tight font-bold">SD Harapan 2 Tahfidz</h1>
           <p className="text-[10px] md:font-body-sm md:text-body-sm text-muted-foreground uppercase tracking-[0.2em]">Manajemen Pengarsipan</p>
