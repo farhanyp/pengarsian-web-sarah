@@ -39,7 +39,7 @@ export interface SidebarProps {
 // ---------------------------------------------------------------------------
 
 export const navItems: NavItem[] = [
-    { name: 'Dashboard', icon: LayoutDashboard, path: '/', roles: ['ADMIN', 'GURU', 'KEPALA_SEKOLAH', 'WALI_KELAS', 'SUPERADMIN'] },
+    { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard', roles: ['ADMIN', 'GURU', 'KEPALA_SEKOLAH', 'WALI_KELAS', 'SUPERADMIN'] },
     { name: 'Manajemen Pengguna', icon: Users, path: '/users', roles: ['SUPERADMIN', 'KEPALA_SEKOLAH'] },
     { name: 'Tahun Akademik', icon: Calendar, path: '/tahun-akademik', roles: ['ADMIN', 'SUPERADMIN'] },
     { name: 'Kelas', icon: UserRound, path: '/kelas', roles: ['ADMIN', 'SUPERADMIN'] },
