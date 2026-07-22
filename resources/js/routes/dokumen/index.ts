@@ -223,7 +223,7 @@ update.put = (args: { document: string | { id: string } } | [document: string | 
     update.form = updateForm
 /**
 * @see \App\Http\Controllers\DocumentController::destroy
- * @see app/Http/Controllers/DocumentController.php:103
+ * @see app/Http/Controllers/DocumentController.php:110
  * @route '/dokumen/{document}'
  */
 export const destroy = (args: { document: string | { id: string } } | [document: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -238,7 +238,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\DocumentController::destroy
- * @see app/Http/Controllers/DocumentController.php:103
+ * @see app/Http/Controllers/DocumentController.php:110
  * @route '/dokumen/{document}'
  */
 destroy.url = (args: { document: string | { id: string } } | [document: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -271,7 +271,7 @@ destroy.url = (args: { document: string | { id: string } } | [document: string |
 
 /**
 * @see \App\Http\Controllers\DocumentController::destroy
- * @see app/Http/Controllers/DocumentController.php:103
+ * @see app/Http/Controllers/DocumentController.php:110
  * @route '/dokumen/{document}'
  */
 destroy.delete = (args: { document: string | { id: string } } | [document: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -281,7 +281,7 @@ destroy.delete = (args: { document: string | { id: string } } | [document: strin
 
     /**
 * @see \App\Http\Controllers\DocumentController::destroy
- * @see app/Http/Controllers/DocumentController.php:103
+ * @see app/Http/Controllers/DocumentController.php:110
  * @route '/dokumen/{document}'
  */
     const destroyForm = (args: { document: string | { id: string } } | [document: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -296,7 +296,7 @@ destroy.delete = (args: { document: string | { id: string } } | [document: strin
 
             /**
 * @see \App\Http\Controllers\DocumentController::destroy
- * @see app/Http/Controllers/DocumentController.php:103
+ * @see app/Http/Controllers/DocumentController.php:110
  * @route '/dokumen/{document}'
  */
         destroyForm.delete = (args: { document: string | { id: string } } | [document: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

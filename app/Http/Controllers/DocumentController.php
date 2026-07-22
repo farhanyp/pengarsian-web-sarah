@@ -93,7 +93,14 @@ class DocumentController extends Controller
      */
     public function update(Request $request, Document $document)
     {
-        // To be implemented
+        $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
+        $document->update([
+            'title' => $request->title,
+        ]);
+
         return back()->with('success', 'Dokumen berhasil diperbarui.');
     }
 
@@ -102,7 +109,30 @@ class DocumentController extends Controller
      */
     public function destroy(Document $document)
     {
-        // To be implemented
-        return back()->with('success', 'Dokumen berhasil dihapus.');
+        try {
+            \Illuminate\Support\Facades\DB::beginTransaction();
+
+            // Delete from public storage
+            if ($document->current_url && \Illuminate\Support\Facades\Storage::disk('public')->exists($document->current_url)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($document->current_url);
+            }
+
+            // Delete all historical files from storage
+            foreach ($document->history as $history) {
+                if ($history->file_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($history->file_path)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($history->file_path);
+                }
+            }
+
+            // Cascade delete will automatically delete from DB
+            $document->delete();
+
+            \Illuminate\Support\Facades\DB::commit();
+
+            return back()->with('success', 'Dokumen berhasil dihapus.');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            return back()->withErrors(['error' => 'Gagal menghapus dokumen: ' . $e->getMessage()]);
+        }
     }
 }
