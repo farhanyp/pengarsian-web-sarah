@@ -44,9 +44,17 @@ export default function Welcome({
                 <div className="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
                     <main className="flex w-full max-w-[335px] flex-col lg:max-w-3xl">
                         <div className="flex-1 rounded-lg bg-white p-8 lg:p-16 text-[13px] leading-[20px] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:text-[#EDEDEC] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
-                            <h1 className="mb-2 text-2xl font-bold text-[#1b1b18] dark:text-[#EDEDEC] text-center">
+                            <div className="flex flex-col items-center mb-8">
+                                <div className="mb-2 w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden shadow-md flex items-center justify-center bg-white">
+                                    <img src="/sd-it-harapan2.png" alt="Logo" className="w-full h-full object-cover" />
+                                </div>
+                                <h1 className="text-xl md:text-2xl text-[#1b1b18] dark:text-[#EDEDEC] tracking-tight font-bold text-center">SD Harapan 2 Tahfidz</h1>
+                                <p className="text-xs text-[#706f6c] dark:text-[#A1A09A] uppercase tracking-[0.2em] text-center mt-1">Manajemen Pengarsipan</p>
+                            </div>
+
+                            <h2 className="mb-2 text-2xl font-bold text-[#1b1b18] dark:text-[#EDEDEC] text-center">
                                 Visi
-                            </h1>
+                            </h2>
                             <p className="mb-10 text-lg text-[#706f6c] dark:text-[#A1A09A] text-center">
                                 Unggul di Bidang Pendidikan Umum dan Agama
                             </p>
